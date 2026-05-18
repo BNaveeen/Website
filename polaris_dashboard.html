@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polaris Reports</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f11;--bg2:#17171a;--bg3:#1e1e23;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#f0eff4;--text2:#9897a4;--text3:#5c5b68;
+  --accent:#7c6af7;--accent2:#5dcaa5;--red:#e24b4a;
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;font-size:14px;overflow-x:hidden}
+/* topbar */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:50px;border-bottom:1px solid var(--border);flex-shrink:0;gap:8px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:8px;font-weight:600;font-size:15px}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.period-tabs{display:flex;gap:4px}
+.ptab{font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);background:transparent;cursor:pointer;font-family:var(--font);transition:all .15s}
+.ptab.active{border-color:var(--accent);color:var(--accent);background:rgba(124,106,247,.1);font-weight:500}
+/* webhook bar */
+.wbar{padding:8px 20px;background:rgba(124,106,247,.04);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wbar label{font-size:11px;color:var(--text2);white-space:nowrap}
+.winput{flex:1;min-width:220px;font-family:var(--mono);font-size:11px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:6px 10px;color:var(--text);outline:none}
+.winput:focus{border-color:var(--accent)}
+.wbtn{padding:6px 14px;font-size:12px;font-family:var(--font);background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:500;white-space:nowrap}
+/* loading bar */
+.loadbar{height:2px;background:var(--bg3);flex-shrink:0}
+.loadfill{height:100%;width:0%;background:var(--accent);transition:width .4s}
+/* layout */
+.main{display:flex;flex:1;overflow:hidden}
+/* sidebar */
+.sidebar{width:195px;flex-shrink:0;border-right:1px solid var(--border);padding:14px 0;overflow-y:auto}
+.slabel{font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;padding:0 14px;margin-bottom:6px}
+.hbtn{width:100%;text-align:left;padding:7px 14px;border:none;background:transparent;color:var(--text2);font-family:var(--font);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .12s}
+.hbtn:hover{background:var(--bg3);color:var(--text)}
+.hbtn.active{background:rgba(124,106,247,.12);color:var(--accent);font-weight:500}
+.hdot{width:6px;height:6px;border-radius:50%;background:var(--accent2);flex-shrink:0}
+/* content */
+.content{flex:1;display:flex;flex-direction:column;min-width:0;overflow:auto}
+/* metrics */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);flex-shrink:0}
+.metric{background:var(--bg);padding:18px 20px}
+.mlabel{font-size:10px;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px}
+.mval{font-size:24px;font-weight:500;letter-spacing:-.5px;min-height:30px}
+.msub{font-size:11px;color:var(--text3);margin-top:3px}
+/* body area */
+.body-area{flex:1;display:grid;grid-template-columns:1fr 310px;gap:1px;background:var(--border);min-height:0}
+/* chart section */
+.chart-section{background:var(--bg);display:flex;flex-direction:column;min-height:0}
+.chart-panel{padding:18px 20px;flex-shrink:0}
+.ctitle{font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.ctbtns{display:flex;gap:4px}
+.ctbtn{font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid var(--border2);color:var(--text3);background:transparent;cursor:pointer;font-family:var(--font)}
+.ctbtn.active{border-color:var(--accent2);color:var(--accent2)}
+.chart-wrap{position:relative;height:210px}
+/* breadcrumb */
+.breadcrumb{padding:8px 20px;border-top:1px solid var(--border);display:none;align-items:center;gap:8px;flex-shrink:0}
+.breadcrumb.show{display:flex}
+.backbtn{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--accent2);background:transparent;cursor:pointer;font-family:var(--font);margin-left:auto}
+/* sort bar */
+.sortbar{padding:8px 20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0}
+.sortlabel{font-size:11px;color:var(--text3)}
+.sbtn{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);background:transparent;cursor:pointer;font-family:var(--font)}
+.sbtn.active{border-color:var(--accent2);color:var(--accent2)}
+/* table */
+.dtable-wrap{flex:1;overflow-y:auto;padding:0 20px 16px}
+table.dt{width:100%;border-collapse:collapse;font-size:12px}
+table.dt th{text-align:left;color:var(--text3);font-weight:500;padding:6px 8px;border-bottom:1px solid var(--border);font-size:10px;text-transform:uppercase;position:sticky;top:0;background:var(--bg)}
+table.dt td{padding:7px 8px;border-bottom:1px solid var(--border);color:var(--text2)}
+table.dt tr.dr{cursor:pointer}
+table.dt tr.dr:hover td{background:var(--bg3)}
+.barcell{display:flex;align-items:center;gap:6px}
+.barbg{flex:1;height:3px;background:var(--bg3);border-radius:2px;min-width:30px}
+.barfill{height:3px;border-radius:2px;background:var(--accent)}
+.num{font-family:var(--mono);font-size:11px;color:var(--text);text-align:right}
+/* chat panel */
+.chat-panel{background:var(--bg2);display:flex;flex-direction:column;min-height:0}
+.chatheader{padding:12px 14px;border-bottom:1px solid var(--border);font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;gap:7px;flex-shrink:0}
+.aidot{width:6px;height:6px;border-radius:50%;background:var(--accent2);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.chatmsgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.chatmsgs::-webkit-scrollbar{width:3px}
+.chatmsgs::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.msg{font-size:12px;line-height:1.6;word-break:break-word}
+.msg-user{align-self:flex-end;background:rgba(124,106,247,.15);border:1px solid rgba(124,106,247,.25);color:var(--text);padding:7px 11px;border-radius:12px 12px 2px 12px;max-width:88%}
+.msg-ai{align-self:flex-start;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:7px 11px;border-radius:2px 12px 12px 12px;max-width:98%}
+.msg-ai table{width:100%;border-collapse:collapse;margin-top:6px;font-size:11px}
+.msg-ai th{text-align:left;color:var(--text3);font-weight:500;padding:3px 5px;border-bottom:1px solid var(--border)}
+.msg-ai td{padding:3px 5px;border-bottom:1px solid var(--border);color:var(--text2)}
+.thinking{color:var(--text3);font-style:italic}
+.merror{color:var(--red)}
+.chips{padding:6px 12px;display:flex;flex-wrap:wrap;gap:5px;flex-shrink:0}
+.chip{font-size:10px;padding:4px 9px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);background:transparent;cursor:pointer;font-family:var(--font)}
+.chip:hover{border-color:var(--accent2);color:var(--accent2)}
+.inputrow{padding:10px 12px;border-top:1px solid var(--border);display:flex;gap:7px;align-items:center;flex-shrink:0}
+.cinput{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;color:var(--text);font-family:var(--font);font-size:13px;outline:none}
+.cinput:focus{border-color:var(--accent)}
+.cinput::placeholder{color:var(--text3)}
+.sendbtn{width:34px;height:34px;min-width:34px;border-radius:8px;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.sendbtn svg{width:14px;height:14px;fill:white;pointer-events:none}
+/* responsive */
+@media(max-width:900px){.sidebar{display:none}.metrics{grid-template-columns:repeat(2,1fr)}.body-area{grid-template-columns:1fr}.main{overflow:auto}.chat-panel{min-height:380px}}
+@media(max-width:560px){.mval{font-size:18px}.metrics{gap:0}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo"><div class="logo-dot"></div>Polaris Reports</div>
+  <div class="period-tabs">
+    <button class="ptab active" data-period="week">Week</button>
+    <button class="ptab" data-period="month">Month</button>
+    <button class="ptab" data-period="quarter">Quarter</button>
+    <button class="ptab" data-period="year">Year</button>
+  </div>
+</div>
+
+<div class="wbar">
+  <label>n8n Webhook URL</label>
+  <input class="winput" id="hookInput" type="text" placeholder="https://kinvara.app.n8n.cloud/webhook/...">
+  <button class="wbtn" id="hookSaveBtn">Save &amp; Load</button>
+</div>
+<div class="loadbar"><div class="loadfill" id="loadFill"></div></div>
+
+<div class="main">
+  <div class="sidebar">
+    <div class="slabel">Houses</div>
+    <button class="hbtn active" data-house="All houses"><span class="hdot"></span>All houses</button>
+    <button class="hbtn" data-house="The Mitre"><span class="hdot"></span>The Mitre</button>
+    <button class="hbtn" data-house="The Selkirk"><span class="hdot"></span>The Selkirk</button>
+    <button class="hbtn" data-house="The Portman"><span class="hdot"></span>The Portman</button>
+    <button class="hbtn" data-house="The Larrik"><span class="hdot"></span>The Larrik</button>
+    <button class="hbtn" data-house="The Island"><span class="hdot"></span>The Island</button>
+    <button class="hbtn" data-house="The Hillgate"><span class="hdot"></span>The Hillgate</button>
+    <button class="hbtn" data-house="The Wilton Arms"><span class="hdot"></span>The Wilton Arms</button>
+    <button class="hbtn" data-house="The Chamberlayne"><span class="hdot"></span>The Chamberlayne</button>
+    <button class="hbtn" data-house="Rose &amp; Crown"><span class="hdot"></span>Rose &amp; Crown</button>
+    <button class="hbtn" data-house="Admiral Codrington"><span class="hdot"></span>Admiral Codrington</button>
+  </div>
+
+  <div class="content">
+    <div class="metrics">
+      <div class="metric"><div class="mlabel">Total net sales</div><div class="mval" id="m1">—</div><div class="msub" id="m1s">Awaiting data</div></div>
+      <div class="metric"><div class="mlabel">Top house</div><div class="mval" id="m2" style="font-size:17px;padding-top:4px">—</div><div class="msub" id="m2s">—</div></div>
+      <div class="metric"><div class="mlabel">Lowest house</div><div class="mval" id="m3" style="font-size:17px;padding-top:4px">—</div><div class="msub" id="m3s">—</div></div>
+      <div class="metric"><div class="mlabel">Avg per house</div><div class="mval" id="m4">—</div><div class="msub" id="m4s">—</div></div>
+    </div>
+
+    <div class="body-area">
+      <div class="chart-section">
+        <div class="chart-panel">
+          <div class="ctitle">
+            <span id="chartTitle">Net sales by house</span>
+            <div class="ctbtns">
+              <button class="ctbtn active" data-ctype="bar">Bar</button>
+              <button class="ctbtn" data-ctype="hbar">H-Bar</button>
+              <button class="ctbtn" data-ctype="line">Line</button>
+            </div>
+          </div>
+          <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
+        </div>
+
+        <div class="breadcrumb" id="breadcrumb">
+          <span style="font-size:11px;color:var(--text3)">Viewing:</span>
+          <span id="bcText" style="font-size:11px;color:var(--accent2)"></span>
+          <button class="backbtn" id="backBtn">← All houses</button>
+        </div>
+
+        <div class="sortbar">
+          <span class="sortlabel">Sort:</span>
+          <button class="sbtn active" data-sort="desc">Highest first</button>
+          <button class="sbtn" data-sort="asc">Lowest first</button>
+          <button class="sbtn" data-sort="alpha">A–Z</button>
+        </div>
+
+        <div class="dtable-wrap">
+          <table class="dt">
+            <thead><tr><th>#</th><th>House / Category</th><th>Share</th><th style="text-align:right">Net Sales (£)</th></tr></thead>
+            <tbody id="tbody"><tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text3)">Enter webhook URL above and click Save &amp; Load</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="chat-panel">
+        <div class="chatheader"><div class="aidot"></div>AI Analyst</div>
+        <div class="chatmsgs" id="chatMsgs">
+          <div class="msg msg-ai">Hi! I'm connected to your Polaris data.<br><br>Enter your webhook URL above and click <strong>Save &amp; Load</strong> to begin.</div>
+        </div>
+        <div class="chips">
+          <button class="chip" data-q="Total net sales by house this week">By house</button>
+          <button class="chip" data-q="Compare this week vs last week for all houses">Week vs week</button>
+          <button class="chip" data-q="Sales by category this month">By category</button>
+          <button class="chip" data-q="Top 5 houses by net sales this month">Top 5</button>
+          <button class="chip" data-q="Daily sales trend this week">Daily trend</button>
+        </div>
+        <div class="inputrow">
+          <input class="cinput" id="chatInput" placeholder="Ask about your data...">
+          <button class="sendbtn" id="sendBtn">
+            <svg viewBox="0 0 24 24" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var WEBHOOK = localStorage.getItem('polaris_hook') || '';
+  var period = 'week';
+  var house = 'All houses';
+  var ctype = 'bar';
+  var sortOrder = 'desc';
+  var rawData = [];
+  var savedData = [];
+  var drillMode = false;
+  var myChart = null;
+  var chartLabels = [];
+
+  var PALETTE = ['#7c6af7','#5dcaa5','#f0997b','#378add','#d4537e','#ba7517','#639922','#1d9e75','#d85a30','#7f77dd','#ef9f27','#e24b4a'];
+  var HOUSES = ['The Mitre','The Selkirk','The Portman','The Larrik','The Island','The Hillgate','The Wilton Arms','The Chamberlayne','Rose & Crown','Admiral Codrington','Mitre','Selkirk','Portman','Larrik','Island','Hillgate','Wilton Arms','Chamberlayne'];
+
+  function fmt(v) { return '£' + Math.round(v).toLocaleString('en-GB'); }
+
+  function setLoad(p) { document.getElementById('loadFill').style.width = p + '%'; }
+
+  function addMsg(role, html) {
+    var el = document.createElement('div');
+    el.className = 'msg msg-' + role;
+    el.innerHTML = html;
+    var box = document.getElementById('chatMsgs');
+    box.appendChild(el);
+    box.scrollTop = box.scrollHeight;
+    return el;
+  }
+
+  function doQuery(q) {
+    if (!WEBHOOK) { addMsg('ai', '<span class="merror">Please enter your n8n webhook URL above and click Save &amp; Load.</span>'); return; }
+    addMsg('user', q);
+    var thinking = addMsg('ai', '<span class="thinking">Querying database...</span>');
+    setLoad(35);
+
+    fetch(WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: q, house: house, period: period })
+    })
+    .then(function(r) { return r.text(); })
+    .then(function(raw) {
+      setLoad(80);
+      var reply = raw;
+      try {
+        var j = JSON.parse(raw);
+        reply = j.output || j.text || j.message || j.response || j.answer || j.result || raw;
+      } catch(e) {}
+      thinking.innerHTML = parseReply(reply).html || reply;
+      var pd = parseReply(reply);
+      thinking.innerHTML = pd.html || reply;
+      if (pd.data.length > 0) { rawData = pd.data; updateDash(pd.data); }
+      setLoad(100);
+      setTimeout(function() { setLoad(0); }, 700);
+    })
+    .catch(function(e) {
+      thinking.innerHTML = '<span class="merror">Error: ' + e.message + '. Make sure CORS header Access-Control-Allow-Origin: * is set in your Respond to Webhook node.</span>';
+      setLoad(0);
+    });
+  }
+
+  function parseReply(text) {
+    var data = [];
+    var lines = text.split('\n');
+    var html = '';
+    var inTable = false;
+    var tHtml = '';
+    var valIdx = -1;
+    var nameIdx = 0;
+
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      if (!line) { if (!inTable) html += '<br>'; continue; }
+
+      if (line.indexOf('|') > -1 && line.split('|').length > 2) {
+        var cells = line.split('|').map(function(c){return c.trim();}).filter(function(c){return c;});
+        if (cells.length > 0 && cells.every(function(c){return /^[-: ]+$/.test(c);})) continue;
+        if (!inTable) {
+          inTable = true; valIdx = -1; nameIdx = 0;
+          cells.forEach(function(h, idx) {
+            var l = h.toLowerCase();
+            if (l.indexOf('net')>-1||l.indexOf('sales')>-1||l.indexOf('total')>-1||l.indexOf('amount')>-1||l.indexOf('value')>-1) valIdx = idx;
+            if (l.indexOf('house')>-1||l.indexOf('name')>-1||l.indexOf('category')>-1||l.indexOf('stream')>-1) nameIdx = idx;
+          });
+          if (valIdx === -1) valIdx = cells.length - 1;
+          tHtml = '<table><tr>' + cells.map(function(h){return '<th>'+h+'</th>';}).join('') + '</tr>';
+        } else {
+          tHtml += '<tr>' + cells.map(function(c){return '<td>'+c+'</td>';}).join('') + '</tr>';
+          var nm = (cells[nameIdx]||cells[0]||'').replace(/^\d+[\.\)]\s*/,'').trim();
+          var rv = (cells[valIdx]||cells[cells.length-1]||'').replace(/[£,\s]/g,'');
+          var vl = parseFloat(rv) || 0;
+          if (nm && vl > 0 && !/^[-:]+$/.test(nm)) data.push({name:nm, value:vl});
+        }
+        continue;
+      }
+      if (inTable) { html += tHtml + '</table>'; inTable = false; tHtml = ''; valIdx = -1; }
+
+      var hm = null;
+      for (var h = 0; h < HOUSES.length; h++) { if (line.indexOf(HOUSES[h]) > -1) { hm = HOUSES[h]; break; } }
+      var nm2 = line.match(/[\d,]+\.?\d*/g);
+      if (hm && nm2) {
+        var vs = nm2.map(function(n){return parseFloat(n.replace(/,/g,''));}).filter(function(v){return v>200;});
+        if (vs.length) data.push({name:hm, value:Math.max.apply(null,vs)});
+      }
+
+      if (/^\*\*/.test(line)) { line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); }
+      if (/^[•\-\*] /.test(line)) html += '<br>• ' + line.replace(/^[•\-\*] /,'');
+      else html += (html ? '<br>' : '') + line;
+    }
+    if (inTable) html += tHtml + '</table>';
+    return { html: html, data: data };
+  }
+
+  function updateDash(data) {
+    var sorted = data.slice().sort(function(a,b){return b.value-a.value;});
+    var total = data.reduce(function(s,d){return s+d.value;},0);
+    document.getElementById('m1').textContent = fmt(total);
+    document.getElementById('m1s').textContent = data.length + ' entries';
+    document.getElementById('m2').textContent = sorted[0]?sorted[0].name:'—';
+    document.getElementById('m2s').textContent = sorted[0]?fmt(sorted[0].value):'—';
+    document.getElementById('m3').textContent = sorted[sorted.length-1]?sorted[sorted.length-1].name:'—';
+    document.getElementById('m3s').textContent = sorted[sorted.length-1]?fmt(sorted[sorted.length-1].value):'—';
+    document.getElementById('m4').textContent = fmt(total/data.length);
+    document.getElementById('m4s').textContent = 'Across ' + data.length + ' entries';
+    applySort();
+  }
+
+  function applySort() {
+    var d = rawData.slice();
+    if (sortOrder==='desc') d.sort(function(a,b){return b.value-a.value;});
+    else if (sortOrder==='asc') d.sort(function(a,b){return a.value-b.value;});
+    else d.sort(function(a,b){return a.name.localeCompare(b.name);});
+    renderChart(d);
+    renderTable(d);
+  }
+
+  function renderChart(data) {
+    chartLabels = data.map(function(d){return d.name;});
+    var labels = data.map(function(d){return d.name.replace(/^The /,'');});
+    var vals = data.map(function(d){return d.value;});
+    var colors = data.map(function(_,i){return PALETTE[i%PALETTE.length];});
+    var isH = ctype==='hbar', isL = ctype==='line';
+    if (myChart) { myChart.destroy(); myChart = null; }
+    var ctx = document.getElementById('mainChart').getContext('2d');
+    myChart = new Chart(ctx, {
+      type: isH?'bar':isL?'line':'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: vals,
+          backgroundColor: isL?'rgba(124,106,247,0.15)':colors,
+          borderColor: isL?'#7c6af7':colors,
+          borderWidth: isL?2:0,
+          borderRadius: isL?0:4,
+          fill: isL, tension: isL?0.35:0,
+          pointBackgroundColor:'#7c6af7', pointRadius:isL?4:0
+        }]
+      },
+      options: {
+        indexAxis: isH?'y':'x',
+        responsive:true, maintainAspectRatio:false,
+        onClick: function(evt, els) {
+          if (els.length && !drillMode) drillDown(chartLabels[els[0].index]);
+        },
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+fmt(c.raw);}}}},
+        scales:{
+          x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#5c5b68',font:{family:'DM Sans',size:10},maxRotation:35}},
+          y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#5c5b68',font:{family:'DM Mono',size:10},callback:function(v){return isH?v:'£'+(v>=1000?Math.round(v/1000)+'k':v);}}}
+        }
+      }
+    });
+  }
+
+  function renderTable(data) {
+    var max = Math.max.apply(null, data.map(function(d){return d.value;}));
+    var rows = data.map(function(d,i){
+      var pct = Math.round(d.value/max*100);
+      var dr = !drillMode ? 'class="dr" onclick="window._dd(\'' + d.name.replace(/\\/g,'\\\\').replace(/'/g,"\\'") + '\')"' : '';
+      var arrow = !drillMode ? ' <span style="font-size:10px;color:var(--text3)">↗</span>' : '';
+      return '<tr '+dr+'><td style="color:var(--text3);font-size:11px;min-width:18px">'+(i+1)+'</td><td>'+d.name+arrow+'</td><td><div class="barcell"><div class="barbg"><div class="barfill" style="width:'+pct+'%"></div></div><span style="font-size:10px;color:var(--text3);min-width:26px">'+pct+'%</span></div></td><td class="num">'+fmt(d.value)+'</td></tr>';
+    }).join('');
+    document.getElementById('tbody').innerHTML = rows || '<tr><td colspan="4" style="text-align:center;padding:16px;color:var(--text3)">No data</td></tr>';
+  }
+
+  function drillDown(name) {
+    drillMode = true;
+    savedData = rawData.slice();
+    document.getElementById('breadcrumb').className = 'breadcrumb show';
+    document.getElementById('bcText').textContent = name + ' — by category';
+    document.getElementById('chartTitle').textContent = name + ' — categories';
+    doQuery('Show net sales by data_stream_name (service category) for ' + name + ' this ' + period);
+  }
+
+  function drillUp() {
+    drillMode = false;
+    document.getElementById('breadcrumb').className = 'breadcrumb';
+    document.getElementById('chartTitle').textContent = 'Net sales by house';
+    if (savedData.length) { rawData = savedData; updateDash(rawData); }
+    else doQuery('Total net sales by house this ' + period);
+  }
+
+  window._dd = drillDown;
+
+  // Init UI
+  var hookInput = document.getElementById('hookInput');
+  hookInput.value = WEBHOOK;
+
+  document.getElementById('hookSaveBtn').addEventListener('click', function() {
+    var v = hookInput.value.trim();
+    if (!v) return;
+    WEBHOOK = v;
+    localStorage.setItem('polaris_hook', v);
+    doQuery('Total net sales by house this ' + period);
+  });
+
+  document.querySelectorAll('.ptab').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.ptab').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      period = btn.getAttribute('data-period');
+      if (WEBHOOK) doQuery('Total net sales by house this ' + period);
+    });
+  });
+
+  document.querySelectorAll('.hbtn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.hbtn').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      house = btn.getAttribute('data-house');
+      drillMode = false;
+      document.getElementById('breadcrumb').className = 'breadcrumb';
+      document.getElementById('chartTitle').textContent = 'Net sales by house';
+      if (!WEBHOOK) return;
+      var q = house === 'All houses'
+        ? 'Total net sales by house this ' + period
+        : 'Total net sales by category for ' + house + ' this ' + period;
+      doQuery(q);
+    });
+  });
+
+  document.querySelectorAll('.ctbtn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.ctbtn').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      ctype = btn.getAttribute('data-ctype');
+      if (rawData.length) applySort();
+    });
+  });
+
+  document.querySelectorAll('.sbtn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.sbtn').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      sortOrder = btn.getAttribute('data-sort');
+      if (rawData.length) applySort();
+    });
+  });
+
+  document.querySelectorAll('.chip').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      if (WEBHOOK) doQuery(btn.getAttribute('data-q'));
+      else addMsg('ai', '<span class="merror">Please enter webhook URL and click Save &amp; Load first.</span>');
+    });
+  });
+
+  document.getElementById('sendBtn').addEventListener('click', function() {
+    var inp = document.getElementById('chatInput');
+    var q = inp.value.trim();
+    if (q) { inp.value = ''; doQuery(q); }
+  });
+
+  document.getElementById('chatInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      var q = this.value.trim();
+      if (q) { this.value = ''; doQuery(q); }
+    }
+  });
+
+  document.getElementById('backBtn').addEventListener('click', drillUp);
+
+  // Auto-load if webhook already saved
+  if (WEBHOOK) {
+    setTimeout(function() { doQuery('Total net sales by house this week'); }, 400);
+  }
+})();
+</script>
+</body>
+</html>
