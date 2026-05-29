@@ -3,634 +3,621 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Excel Mastery — Interactive Learning Guide</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Excel Mastery — Full Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Epilogue:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#08090D;--surface:#0F1118;--surface2:#161922;--border:#1F2333;
+:root{
+  --bg:#08090D;--sf:#0F1118;--sf2:#161922;--bd:#1F2333;
   --g:#16A34A;--g2:#22C55E;--y:#CA8A04;--y2:#EAB308;
   --o:#C2410C;--o2:#F97316;--r:#B91C1C;--r2:#EF4444;
-  --text:#C8CDD8;--muted:#555E7A;--bright:#E8ECF5;--white:#fff;
+  --tx:#C8CDD8;--mu:#555E7A;--br:#E8ECF5;
+  --hdr-h:52px;--sb-w:240px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;overflow:hidden;}
-body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;}
+html{height:100%;-webkit-text-size-adjust:100%;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--tx);min-height:100%;display:flex;flex-direction:column;}
 
 /* ── HEADER ── */
-.hdr{flex-shrink:0;display:flex;align-items:center;gap:0;border-bottom:1px solid var(--border);background:var(--surface);padding:0 0 0 0;height:54px;}
-.hdr-brand{display:flex;align-items:center;gap:12px;padding:0 20px;border-right:1px solid var(--border);height:100%;}
-.hdr-logo{width:28px;height:28px;background:var(--g2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
-.hdr-title{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:var(--bright);letter-spacing:.3px;white-space:nowrap;}
+.hdr{flex-shrink:0;display:flex;align-items:center;border-bottom:1px solid var(--bd);background:var(--sf);height:var(--hdr-h);position:sticky;top:0;z-index:100;}
+.hdr-brand{display:flex;align-items:center;gap:10px;padding:0 14px;border-right:1px solid var(--bd);height:100%;flex-shrink:0;}
+.hdr-logo{width:26px;height:26px;background:var(--g2);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.hdr-title{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:var(--br);white-space:nowrap;}
 .hdr-title span{color:var(--g2);}
-.tabs{display:flex;height:100%;overflow-x:auto;flex:1;}
+.tabs{display:flex;height:100%;overflow-x:auto;flex:1;-webkit-overflow-scrolling:touch;}
 .tabs::-webkit-scrollbar{display:none;}
-.tab{padding:0 18px;font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:7px;}
-.tab:hover{color:var(--text);}
-.tab.active{color:var(--bright);border-bottom-color:var(--g2);}
+.tab{padding:0 14px;font-size:11px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--mu);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:5px;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
+.tab:hover{color:var(--tx);}
+.tab.active{color:var(--br);border-bottom-color:var(--g2);}
 .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.hdr-progress{padding:0 20px;display:flex;align-items:center;gap:10px;border-left:1px solid var(--border);height:100%;flex-shrink:0;}
-.hdr-pct{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--g2);font-weight:500;white-space:nowrap;}
-.hdr-bar{width:80px;height:3px;background:var(--border);border-radius:2px;}
+.hdr-prog{padding:0 12px;display:flex;align-items:center;gap:8px;border-left:1px solid var(--bd);height:100%;flex-shrink:0;}
+.hdr-pct{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--g2);white-space:nowrap;}
+.hdr-bar{width:60px;height:3px;background:var(--bd);border-radius:2px;}
 .hdr-fill{height:100%;background:var(--g2);border-radius:2px;transition:width .5s;}
 
+/* ── MOBILE MENU TOGGLE ── */
+.menu-toggle{display:none;background:none;border:none;color:var(--tx);font-size:18px;padding:0 14px;cursor:pointer;height:100%;align-items:center;-webkit-tap-highlight-color:transparent;}
+
 /* ── BODY LAYOUT ── */
-.body-layout{flex:1;display:flex;overflow:hidden;}
+.layout{flex:1;display:flex;position:relative;}
 
 /* ── SIDEBAR ── */
-.sb{width:240px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;}
+.sb{width:var(--sb-w);flex-shrink:0;background:var(--sf);border-right:1px solid var(--bd);overflow-y:auto;height:calc(100vh - var(--hdr-h));position:sticky;top:var(--hdr-h);}
 .sb::-webkit-scrollbar{width:3px;}
-.sb::-webkit-scrollbar-thumb{background:var(--border);}
-.sb-sec{border-bottom:1px solid var(--border);}
-.sb-head{padding:9px 12px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;background:var(--surface2);transition:color .15s;}
-.sb-head:hover{color:var(--text);}
-.sb-head .arrow{margin-left:auto;transition:transform .2s;font-size:8px;}
-.sb-head.closed .arrow{transform:rotate(-90deg);}
-.sb-items{}
-.sb-item{padding:7px 12px 7px 22px;font-size:12px;cursor:pointer;color:var(--muted);transition:all .15s;border-left:2px solid transparent;display:flex;align-items:center;gap:7px;line-height:1.3;}
-.sb-item:hover{color:var(--text);background:rgba(255,255,255,.025);}
-.sb-item.active{color:var(--bright);border-left-color:var(--g2);background:rgba(34,197,94,.07);}
-.sb-item .ck{font-size:9px;flex-shrink:0;width:10px;}
+.sb::-webkit-scrollbar-thumb{background:var(--bd);}
+.sb-sec{border-bottom:1px solid var(--bd);}
+.sb-head{padding:8px 12px;font-size:9px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--mu);display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--sf2);user-select:none;-webkit-tap-highlight-color:transparent;}
+.sb-head:hover{color:var(--tx);}
+.sb-head .arr{margin-left:auto;font-size:8px;transition:transform .2s;}
+.sb-head.closed .arr{transform:rotate(-90deg);}
+.sb-item{padding:8px 12px 8px 20px;font-size:12px;cursor:pointer;color:var(--mu);transition:all .15s;border-left:2px solid transparent;display:flex;align-items:flex-start;gap:6px;line-height:1.4;-webkit-tap-highlight-color:transparent;}
+.sb-item:hover{color:var(--tx);background:rgba(255,255,255,.02);}
+.sb-item.active{color:var(--br);border-left-color:var(--g2);background:rgba(34,197,94,.07);}
+.sb-item .ck{font-size:9px;flex-shrink:0;margin-top:2px;}
 
-/* ── MAIN ── */
-.main{flex:1;overflow-y:auto;background:var(--bg);}
+/* ── MAIN CONTENT ── */
+.main{flex:1;overflow-y:auto;min-width:0;}
 .main::-webkit-scrollbar{width:4px;}
-.main::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.main::-webkit-scrollbar-thumb{background:var(--bd);}
 
 /* ── WELCOME ── */
-.welcome{padding:40px;max-width:700px;}
-.welcome-eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g2);margin-bottom:10px;}
-.welcome h2{font-family:'Syne',sans-serif;font-weight:800;font-size:30px;color:var(--bright);line-height:1.1;margin-bottom:14px;}
-.welcome > p{font-size:13px;color:var(--muted);line-height:1.8;max-width:520px;margin-bottom:24px;}
-.how-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:20px;}
-.how-box h3{font-size:10px;color:var(--g2);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;}
-.how-steps{display:flex;flex-direction:column;gap:8px;}
-.how-step{display:flex;gap:12px;align-items:flex-start;}
-.how-num{width:20px;height:20px;border-radius:50%;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--g2);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-.how-step p{font-size:12px;color:var(--muted);line-height:1.6;}
-.stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;cursor:pointer;transition:all .2s;}
-.stat-card:hover{border-color:rgba(34,197,94,.3);transform:translateY(-1px);}
-.stat-card .n{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;line-height:1;}
-.stat-card .l{font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.8px;}
-.stat-card .sub-pct{font-size:10px;color:var(--muted);margin-top:2px;font-family:'JetBrains Mono',monospace;}
+.welcome{padding:28px 24px;max-width:680px;}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g2);margin-bottom:8px;}
+.welcome h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(22px,4vw,28px);color:var(--br);line-height:1.15;margin-bottom:12px;}
+.welcome>p{font-size:13px;color:var(--mu);line-height:1.8;margin-bottom:20px;}
+.how-box{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:14px 16px;margin-bottom:18px;}
+.how-box h3{font-size:9px;color:var(--g2);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;}
+.how-step{display:flex;gap:10px;margin-bottom:6px;}
+.how-num{width:18px;height:18px;border-radius:50%;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--g2);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.how-step p{font-size:12px;color:var(--mu);line-height:1.6;}
+.prog{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:10px 14px;margin-bottom:18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.prog-t{font-size:11px;color:var(--mu);}
+.prog-t strong{color:var(--g2);font-family:'JetBrains Mono',monospace;}
+.prog-track{flex:1;min-width:60px;height:3px;background:var(--bd);border-radius:2px;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--g),var(--g2));border-radius:2px;transition:width .5s;}
+.stat-row{display:flex;gap:8px;flex-wrap:wrap;}
+.sc{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:12px 14px;cursor:pointer;transition:all .2s;min-width:90px;-webkit-tap-highlight-color:transparent;}
+.sc:hover{border-color:rgba(34,197,94,.3);transform:translateY(-1px);}
+.sc .n{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;line-height:1;}
+.sc .l{font-size:9px;color:var(--mu);margin-top:3px;text-transform:uppercase;letter-spacing:.8px;}
+.sc .pp{font-size:10px;color:var(--mu);margin-top:1px;font-family:'JetBrains Mono',monospace;}
 
 /* ── LESSON ── */
-.lesson{padding:32px 40px;max-width:800px;animation:fadeUp .3s ease;}
+.lesson{padding:24px;max-width:780px;animation:fadeUp .3s ease;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.lesson-nav{display:flex;align-items:center;gap:8px;margin-bottom:20px;}
-.back-btn{font-size:11px;color:var(--muted);cursor:pointer;transition:color .15s;display:flex;align-items:center;gap:4px;}
-.back-btn:hover{color:var(--g2);}
-.nav-sep{color:var(--border);}
-.nav-crumb{font-size:11px;color:var(--muted);}
-.lvl-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:10px;}
-.lesson-h1{font-family:'Syne',sans-serif;font-weight:800;font-size:32px;color:var(--bright);line-height:1.1;margin-bottom:6px;}
-.lesson-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:22px;}
-
-/* progress strip */
-.prog{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:22px;display:flex;align-items:center;gap:12px;}
-.prog-text{font-size:11px;color:var(--muted);}
-.prog-text strong{color:var(--g2);font-family:'JetBrains Mono',monospace;}
-.prog-track{flex:1;height:3px;background:var(--border);border-radius:2px;}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--g),var(--g2));border-radius:2px;transition:width .5s;}
-
-/* blocks */
-.blk{margin-bottom:20px;}
-.blk-head{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--g2);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
-.blk-head::after{content:'';flex:1;height:1px;background:var(--border);}
-.explain{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--g2);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;color:var(--text);}
-.explain strong{color:var(--g2);}
-
-/* steps */
-.steps{display:flex;flex-direction:column;gap:8px;}
-.step{display:flex;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;transition:border-color .2s;cursor:default;}
+.lesson-nav{display:flex;align-items:center;gap:6px;margin-bottom:16px;}
+.back{font-size:12px;color:var(--mu);cursor:pointer;transition:color .15s;padding:6px 0;-webkit-tap-highlight-color:transparent;}
+.back:hover{color:var(--g2);}
+.sep{color:var(--bd);}
+.crumb{font-size:11px;color:var(--mu);}
+.lbadge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:8px;}
+.lh1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(22px,5vw,30px);color:var(--br);line-height:1.1;margin-bottom:5px;}
+.lsub{font-size:13px;color:var(--mu);line-height:1.6;margin-bottom:20px;}
+.blk{margin-bottom:18px;}
+.bhead{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--g2);margin-bottom:8px;display:flex;align-items:center;gap:7px;}
+.bhead::after{content:'';flex:1;height:1px;background:var(--bd);}
+.expl{background:var(--sf);border:1px solid var(--bd);border-left:3px solid var(--g2);border-radius:8px;padding:14px;font-size:13px;line-height:1.8;color:var(--tx);}
+.expl strong{color:var(--g2);}
+.steps{display:flex;flex-direction:column;gap:7px;}
+.step{display:flex;gap:10px;background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:12px;transition:border-color .2s;}
 .step:hover{border-color:rgba(34,197,94,.25);}
-.step-n{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--g),var(--g2));color:#000;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-.step h4{font-size:13px;font-weight:600;color:var(--bright);margin-bottom:3px;}
-.step p{font-size:12px;color:var(--muted);line-height:1.6;}
-
-/* formula */
-.fml{background:#070A10;border:1px solid var(--border);border-radius:7px;padding:11px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#7DD3FC;overflow-x:auto;margin-bottom:4px;}
-.fml-d{font-size:11px;color:var(--muted);margin-bottom:10px;padding-left:2px;}
-
-/* tip */
-.tip{background:rgba(202,138,4,.06);border:1px solid rgba(202,138,4,.2);border-radius:8px;padding:12px 14px;display:flex;gap:10px;}
+.sn{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--g),var(--g2));color:#000;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.step h4{font-size:13px;font-weight:600;color:var(--br);margin-bottom:3px;}
+.step p{font-size:12px;color:var(--mu);line-height:1.6;}
+.fml{background:#070A10;border:1px solid var(--bd);border-radius:6px;padding:10px 13px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#7DD3FC;overflow-x:auto;margin-bottom:4px;-webkit-overflow-scrolling:touch;}
+.fmld{font-size:11px;color:var(--mu);margin-bottom:8px;padding-left:2px;}
+.tip{background:rgba(202,138,4,.06);border:1px solid rgba(202,138,4,.2);border-radius:8px;padding:12px 13px;display:flex;gap:9px;}
 .tip p{font-size:12px;color:#B8922A;line-height:1.6;}
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(190px,100%),1fr));gap:8px;}
+.icard{background:var(--sf);border:1px solid var(--bd);border-radius:7px;overflow:hidden;transition:border-color .2s;}
+.icard:hover{border-color:rgba(34,197,94,.25);}
+.icard svg{display:block;width:100%;height:auto;}
+.icard img{width:100%;height:120px;object-fit:cover;display:block;}
+.iph{height:120px;display:flex;align-items:center;justify-content:center;background:var(--sf2);}
+.iph span{font-size:11px;color:var(--mu);text-align:center;padding:8px;}
+.iph-styled{border-radius:0;}
+.ilbl{padding:6px 9px;font-size:10px;color:var(--mu);line-height:1.4;}
 
-/* images */
-.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:10px;}
-.img-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:all .2s;}
-.img-card:hover{border-color:rgba(34,197,94,.25);}
-.img-card img{width:100%;height:125px;object-fit:cover;display:block;}
-.img-lbl{padding:7px 10px;font-size:10px;color:var(--muted);line-height:1.3;}
-.img-placeholder{height:125px;display:flex;align-items:center;justify-content:center;background:var(--surface2);}
-.img-placeholder span{font-size:11px;color:var(--muted);text-align:center;padding:10px;}
+/* ── MOBILE OVERLAY for sidebar ── */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;opacity:0;transition:opacity .25s;}
+.sb-overlay.visible{opacity:1;}
 
-/* scrollbar */
+/* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-@media(max-width:640px){
-  html,body{overflow:auto;}
-  .body-layout{flex-direction:column;overflow:visible;}
-  .sb{width:100%;height:200px;overflow-y:auto;}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px;}
+
+/* ════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+════════════════════════════════════ */
+
+/* Tablet: 601–900px — collapse sidebar to icon drawer */
+@media(max-width:900px){
+  :root{--sb-w:220px;}
+  .hdr-prog{display:none;}
+  .lesson,.welcome{padding:20px;}
+}
+
+/* Mobile: ≤600px — full responsive layout */
+@media(max-width:600px){
+  :root{--hdr-h:48px;}
+  .hdr-brand{padding:0 12px;}
+  .hdr-title{font-size:13px;}
+  .menu-toggle{display:flex;}
+  .hdr-prog{display:none;}
+
+  /* Sidebar becomes a slide-in drawer */
+  .sb{
+    position:fixed;
+    top:0;left:-100%;
+    width:min(280px,85vw);
+    height:100%;
+    z-index:200;
+    transition:left .28s ease;
+    padding-top:var(--hdr-h);
+    box-shadow:4px 0 24px rgba(0,0,0,.5);
+  }
+  .sb.open{left:0;}
+  .sb-overlay{display:block;}
+  .sb-overlay.visible{display:block;}
+
+  /* Main takes full width */
+  .layout{flex-direction:column;}
+  .main{width:100%;min-height:calc(100vh - var(--hdr-h));}
+
+  /* Content padding */
+  .welcome{padding:16px;}
+  .lesson{padding:16px;}
+
+  /* Welcome stats — 2 columns */
+  .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .sc{min-width:unset;}
+
+  /* Steps full width */
+  .step h4{font-size:12px;}
+  .step p{font-size:11px;}
+
+  /* Images grid — 1 column on very small screens */
+  .igrid{grid-template-columns:1fr 1fr;}
+
+  /* Formula scroll */
+  .fml{font-size:11px;}
+
+  /* Tabs — smaller padding */
+  .tab{padding:0 10px;font-size:10px;}
+
+  /* Progress bar */
+  .prog{flex-wrap:wrap;gap:6px;}
+  .prog-track{width:100%;order:3;min-width:unset;}
+}
+
+/* Very small phones: ≤380px */
+@media(max-width:380px){
+  .igrid{grid-template-columns:1fr;}
+  .stat-row{grid-template-columns:1fr 1fr;}
+  .tab{padding:0 8px;font-size:9px;}
+  .hdr-title .full{display:none;}
+}
+
+/* Landscape mobile */
+@media(max-width:700px) and (orientation:landscape){
+  .sb{width:min(240px,60vw);}
+  .igrid{grid-template-columns:repeat(3,1fr);}
+}
+
+/* Large screens */
+@media(min-width:1200px){
+  .welcome{padding:36px;}
+  .lesson{padding:32px 40px;}
+  .igrid{grid-template-columns:repeat(3,1fr);}
+}
+
+/* Touch devices — bigger tap targets */
+@media(hover:none){
+  .sb-item{padding:10px 12px 10px 20px;}
+  .tab{padding:0 12px;}
+  .back{padding:8px 0;}
+}
+
+/* Print */
+@media print{
+  .hdr,.sb,.sb-overlay,.menu-toggle,.lesson-nav,.prog{display:none!important;}
+  .layout{display:block;}
   .main{overflow:visible;}
-  .lesson,.welcome{padding:16px;}
-  .hdr-progress{display:none;}
+  .lesson{padding:0;max-width:none;}
+  body{background:#fff;color:#000;}
+  .expl,.step,.fml,.tip,.icard{border:1px solid #ccc;background:#f9f9f9;color:#000;}
 }
 </style>
 </head>
 <body>
-
-<!-- HEADER -->
 <div class="hdr">
-  <div class="hdr-brand">
-    <div class="hdr-logo">📗</div>
-    <div class="hdr-title">Excel <span>Mastery</span></div>
-  </div>
+  <div class="hdr-brand"><div class="hdr-logo">📗</div><div class="hdr-title">Excel <span>Mastery</span></div></div>
   <div class="tabs" id="tabs">
-    <div class="tab active" onclick="setLevel('all',this)"><span class="dot" style="background:#444"></span>All Topics</div>
-    <div class="tab" onclick="setLevel('beginner',this)"><span class="dot" style="background:#22C55E"></span>Beginner</div>
-    <div class="tab" onclick="setLevel('intermediate',this)"><span class="dot" style="background:#EAB308"></span>Intermediate</div>
-    <div class="tab" onclick="setLevel('advanced',this)"><span class="dot" style="background:#F97316"></span>Advanced</div>
-    <div class="tab" onclick="setLevel('expert',this)"><span class="dot" style="background:#EF4444"></span>Expert</div>
+    <div class="tab active" onclick="setLv('all',this)"><span class="dot" style="background:#444"></span>All (80+)</div>
+    <div class="tab" onclick="setLv('beginner',this)"><span class="dot" style="background:#22C55E"></span>Beginner</div>
+    <div class="tab" onclick="setLv('intermediate',this)"><span class="dot" style="background:#EAB308"></span>Intermediate</div>
+    <div class="tab" onclick="setLv('advanced',this)"><span class="dot" style="background:#F97316"></span>Advanced</div>
+    <div class="tab" onclick="setLv('expert',this)"><span class="dot" style="background:#EF4444"></span>Expert</div>
   </div>
-  <div class="hdr-progress">
-    <div class="hdr-pct" id="hdrPct">0%</div>
-    <div class="hdr-bar"><div class="hdr-fill" id="hdrFill" style="width:0%"></div></div>
-  </div>
+  <div class="hdr-prog"><div class="hdr-pct" id="hp">0%</div><div class="hdr-bar"><div class="hdr-fill" id="hf" style="width:0%"></div></div></div>
 </div>
-
-<div class="body-layout">
+<div class="layout">
   <div class="sb" id="sb"></div>
-  <div class="main" id="main">
-    <div id="welcomePanel"></div>
-    <div id="lessonPanel" style="display:none"></div>
-  </div>
+  <div class="main" id="main"><div id="wp"></div><div id="lp" style="display:none"></div></div>
 </div>
-
 <script>
-// ════════════════════════════════════════════════════════════════════════════
-// LESSON DATA
-// ════════════════════════════════════════════════════════════════════════════
-const LESSONS = {
-
-"The Excel Interface":{lv:"beginner",c:"#22C55E",sub:"Get familiar with Excel's workspace",
-explain:"Excel's workspace is built around three key elements: the <strong>Ribbon</strong> (toolbar at the top), the <strong>cell grid</strong> (the main work area of columns and rows), and the <strong>Formula Bar</strong> (shows what's inside the selected cell). Knowing where everything lives makes every other skill faster to learn.",
-steps:[{t:"Open a blank workbook",d:"Launch Excel and click 'Blank Workbook'. You'll see a grid — columns labeled A, B, C... and rows numbered 1, 2, 3..."},{t:"Explore the Ribbon tabs",d:"Click Home, Insert, Formulas, Data, Review, View — each tab groups related commands into sections called groups."},{t:"Click a cell",d:"Click cell B3. Notice the Name Box (top-left) shows 'B3' and the cell gets a green border called the active cell indicator."},{t:"Type something",d:"Type 'Hello' — it appears in both the cell and the Formula Bar. Press Enter to confirm."},{t:"Check the Status Bar",d:"Select a range of numbers and look at the bottom bar — it shows Sum, Average, Count instantly without formulas."}],
-formulas:[],
-tip:"Press Ctrl+Home to jump to A1 instantly, and Ctrl+End to jump to the last used cell in your sheet.",
-imgs:["excel spreadsheet interface overview","excel ribbon tabs toolbar","excel formula bar name box cell"]},
-
-"Ribbon & Tabs":{lv:"beginner",c:"#22C55E",sub:"Master Excel's command toolbar",
-explain:"The <strong>Ribbon</strong> is organized into tabs — each one a category of tools. The <strong>Home</strong> tab covers everyday formatting. <strong>Insert</strong> adds charts and tables. <strong>Data</strong> has sorting and analysis tools. You can customize the Ribbon and pin your most-used commands to the Quick Access Toolbar.",
-steps:[{t:"Tour each tab",d:"Click through Home, Insert, Page Layout, Formulas, Data, Review, View to see what's available."},{t:"Find the Home tab essentials",d:"The Home tab has Clipboard (copy/paste), Font, Alignment, Number format, and Styles — your daily drivers."},{t:"Customize Quick Access Toolbar",d:"Right-click any button → 'Add to Quick Access Toolbar'. This pins it above the Ribbon for one-click access."},{t:"Collapse the Ribbon",d:"Double-click any tab to collapse the Ribbon and reclaim screen space. Double-click again to expand."},{t:"Use keyboard navigation",d:"Press Alt to reveal key tips — letters appear on buttons so you can navigate the entire Ribbon by keyboard."}],
-formulas:[],
-tip:"Right-click the Ribbon → Customize the Ribbon → check 'Developer' to unlock macro recording and advanced features.",
-imgs:["excel ribbon tabs groups commands","excel quick access toolbar customize","excel keyboard alt key tips navigation"]},
-
-"Worksheets & Workbooks":{lv:"beginner",c:"#22C55E",sub:"Organise data across sheets and files",
-explain:"A <strong>Workbook</strong> is the Excel file (.xlsx). Inside are one or more <strong>Worksheets</strong> — the tabs you see at the bottom. Think of the workbook as a binder and each sheet as a page. You can reference data across sheets using formulas.",
-steps:[{t:"Add a new sheet",d:"Click the + button next to the sheet tabs, or press Shift+F11 to insert a new worksheet."},{t:"Rename a sheet",d:"Double-click any sheet tab, type a new name, and press Enter. Keep names short and descriptive."},{t:"Move or copy a sheet",d:"Right-click a tab → Move or Copy. Check 'Create a copy' to duplicate the entire sheet."},{t:"Reference another sheet",d:"Type =Sheet2!A1 in a formula to pull the value from cell A1 on Sheet2."},{t:"Color-code tabs",d:"Right-click a tab → Tab Color. Use colors to visually organize: green for data, blue for calculations, red for reports."}],
-formulas:[{s:"=Sheet2!A1",d:"Reference cell A1 from Sheet2"},{s:"='Sales Data'!B5",d:"Reference B5 from a sheet with spaces in its name"}],
-tip:"Use Ctrl+Page Up / Ctrl+Page Down to quickly switch between worksheet tabs without using the mouse.",
-imgs:["excel worksheet tabs navigation","excel workbook multiple sheets organize","excel sheet tab color rename"]},
-
-"Cell References":{lv:"beginner",c:"#22C55E",sub:"Understand relative, absolute and mixed references",
-explain:"Every cell address in a formula is either <strong>relative</strong> (adjusts when copied), <strong>absolute</strong> (stays fixed with $ signs), or <strong>mixed</strong> (one part fixed, one adjusts). Getting this right is the foundation of writing reusable formulas that work correctly across an entire sheet.",
-steps:[{t:"See relative references shift",d:"In B1 type =A1*2. Copy B1 down to B2 — it automatically becomes =A2*2. That's a relative reference adjusting."},{t:"Create an absolute reference",d:"Type =A1*$D$1. Now copy it down — $D$1 stays locked while A1 shifts with each row."},{t:"Toggle with F4",d:"While editing a formula, click on a cell reference and press F4 to cycle: A1 → $A$1 → A$1 → $A1 → A1."},{t:"Mixed reference: lock column only",d:"$A1 keeps column A fixed but allows the row to shift. Useful for referencing a fixed column in a table."},{t:"Mixed reference: lock row only",d:"A$1 keeps row 1 fixed but allows the column to shift. Useful for header rows in a lookup table."}],
-formulas:[{s:"=A1*B1",d:"Relative — both references shift when copied"},{s:"=A1*$D$1",d:"D1 is locked; A1 shifts when copied"},{s:"=$A1*B$1",d:"Mixed: locks column A and row 1"}],
-tip:"Rule of thumb: any cell holding a shared constant (tax rate, exchange rate, discount) should always be referenced as $A$1.",
-imgs:["excel absolute relative cell reference dollar sign","excel F4 toggle reference type formula","excel cell reference copy paste behavior"]},
-
-"Freeze Panes & Split Views":{lv:"beginner",c:"#22C55E",sub:"Keep headers visible while scrolling",
-explain:"<strong>Freeze Panes</strong> locks your header rows or columns so they stay visible as you scroll through large datasets. <strong>Split View</strong> divides the window into panes so you can view two different parts of a sheet simultaneously.",
-steps:[{t:"Freeze the top row",d:"View tab → Freeze Panes → Freeze Top Row. Row 1 stays fixed as you scroll down."},{t:"Freeze the first column",d:"View → Freeze Panes → Freeze First Column. Column A stays visible as you scroll right."},{t:"Freeze multiple rows/columns",d:"Click the cell just BELOW and to the RIGHT of where you want the freeze. Then View → Freeze Panes → Freeze Panes."},{t:"Unfreeze panes",d:"View → Freeze Panes → Unfreeze Panes. This removes all freeze settings."},{t:"Use Split view",d:"Click a cell, then View → Split. The window divides. Drag the split bar to adjust the dividing line."}],
-formulas:[],
-tip:"A thin blue line appears on your sheet showing exactly where the freeze boundary is — handy visual confirmation.",
-imgs:["excel freeze panes top row visible","excel freeze panes column row split","excel large spreadsheet scroll header"]},
-
-"Entering Data":{lv:"beginner",c:"#22C55E",sub:"Enter and edit data efficiently",
-explain:"Excel offers several smart data entry features. <strong>AutoComplete</strong> suggests repeated values as you type. <strong>AutoFill</strong> extends series. <strong>Flash Fill</strong> detects patterns and fills entire columns automatically. Mastering these saves hours of manual typing.",
-steps:[{t:"Basic cell entry",d:"Click a cell, type your value, and press Enter (moves down) or Tab (moves right) to confirm and advance."},{t:"Edit an existing cell",d:"Press F2 to edit the active cell, or click in the Formula Bar. Press Escape to cancel any edits."},{t:"AutoComplete",d:"When typing text in a column, Excel suggests a match from existing entries. Press Enter to accept, or keep typing to ignore."},{t:"Enter same value in many cells",d:"Select multiple cells, type your value, then press Ctrl+Enter — it fills all selected cells at once."},{t:"Auto-fill a series",d:"Type 1 in A1 and 2 in A2, select both, then drag the small fill handle (bottom-right corner) downward."}],
-formulas:[],
-tip:"To enter a number as text (e.g. a zip code starting with 0), type an apostrophe first: '01234. The apostrophe is hidden but forces text format.",
-imgs:["excel data entry cell typing","excel autofill series drag handle","excel flash fill pattern detect"]},
-
-"SUM & AutoSum":{lv:"beginner",c:"#22C55E",sub:"Add up numbers quickly",
-explain:"<strong>SUM</strong> is the most-used Excel function. It adds all numbers in a range, ignoring blank cells and text. <strong>AutoSum</strong> (Alt+=) intelligently detects the nearest range and writes the formula for you, saving time on every report.",
-steps:[{t:"Type a SUM formula",d:"Click a cell below a column of numbers. Type =SUM( then drag to select the numbers, type ) and press Enter."},{t:"Use AutoSum (fastest method)",d:"Click the cell below your data and press Alt+= — Excel guesses the range and fills =SUM() automatically."},{t:"SUM across multiple ranges",d:"=SUM(A1:A10, C1:C10) adds two separate non-contiguous ranges together in one formula."},{t:"AutoSum multiple columns at once",d:"Select a row of empty cells below several data columns, then press Alt+=. All columns get SUM formulas simultaneously."},{t:"SUM an entire column",d:"=SUM(A:A) adds every number in column A. Useful for dynamic tables that grow, but avoid if the column has a numeric header."}],
-formulas:[{s:"=SUM(A1:A10)",d:"Add all values from A1 to A10"},{s:"=SUM(A1:A10,C1:C10)",d:"Add two separate ranges"},{s:"=SUM(A:A)",d:"Sum entire column A"}],
-tip:"Select any range and glance at the Status Bar (bottom right) — Excel shows Sum, Average, and Count instantly without needing a formula.",
-imgs:["excel SUM formula autosum button","excel autosum Alt equals key shortcut","excel SUM function add numbers range"]},
-
-"AVERAGE MIN MAX":{lv:"beginner",c:"#22C55E",sub:"Summarise data with key statistics",
-explain:"<strong>AVERAGE</strong> calculates the arithmetic mean. <strong>MIN</strong> finds the smallest value. <strong>MAX</strong> finds the largest. All three work with the same range syntax as SUM and automatically ignore blank cells — no need to worry about zeros from empty entries.",
-steps:[{t:"Calculate an average",d:"=AVERAGE(B2:B20) returns the mean of all values in B2:B20. Blank cells are ignored automatically."},{t:"Find the minimum value",d:"=MIN(B2:B20) returns the smallest number. Useful for lowest price, oldest date, minimum score."},{t:"Find the maximum value",d:"=MAX(B2:B20) returns the largest number. Useful for peak sales, highest score, latest date."},{t:"Build a summary row",d:"Put SUM, AVERAGE, MIN, MAX, and COUNT in a summary section below your data table for an instant snapshot."},{t:"Span multiple ranges",d:"=AVERAGE(A1:A10, C1:C10) calculates the mean across two separate ranges combined."}],
-formulas:[{s:"=AVERAGE(B2:B20)",d:"Mean of the range"},{s:"=MIN(B2:B20)",d:"Smallest value"},{s:"=MAX(B2:B20)",d:"Largest value"}],
-tip:"AVERAGEА includes text (as 0) and TRUE/FALSE values, while AVERAGE ignores them. Stick to AVERAGE unless you specifically need AVERAGEA.",
-imgs:["excel AVERAGE MIN MAX formula","excel summary statistics data table","excel minimum maximum function result"]},
-
-"COUNT & COUNTA":{lv:"beginner",c:"#22C55E",sub:"Count cells with data",
-explain:"<strong>COUNT</strong> counts only cells with numbers. <strong>COUNTA</strong> counts any non-empty cell (text, numbers, dates, anything). <strong>COUNTBLANK</strong> counts empty cells. Together these three functions tell you exactly how complete your dataset is.",
-steps:[{t:"Use COUNT for numbers",d:"=COUNT(A1:A100) returns how many cells contain numbers. Text and blanks are skipped."},{t:"Use COUNTA for any content",d:"=COUNTA(A1:A100) counts all non-empty cells — numbers, text, dates, errors, everything."},{t:"Use COUNTBLANK for gaps",d:"=COUNTBLANK(A1:A100) returns the count of empty cells. Essential for data quality checks."},{t:"Count data rows dynamically",d:"=COUNTA(A:A)-1 counts the number of data rows, subtracting 1 for the header."},{t:"Check data completeness",d:"=COUNTBLANK(A2:A100)/COUNTA(A:A) shows the fraction of missing values as a percentage."}],
-formulas:[{s:"=COUNT(A1:A100)",d:"Count numeric cells only"},{s:"=COUNTA(A1:A100)",d:"Count all non-empty cells"},{s:"=COUNTBLANK(A1:A100)",d:"Count empty cells"}],
-tip:"COUNTA is your best tool for counting table rows dynamically — it automatically adjusts as you add or remove rows.",
-imgs:["excel COUNT COUNTA function example","excel COUNTBLANK empty cells data quality","excel count cells formula results"]},
-
-"ROUND ROUNDUP ROUNDDOWN":{lv:"beginner",c:"#22C55E",sub:"Control decimal precision in results",
-explain:"<strong>ROUND</strong> rounds to the nearest value (standard). <strong>ROUNDUP</strong> always rounds away from zero. <strong>ROUNDDOWN</strong> always rounds toward zero. The second argument controls precision: 2 means 2 decimal places, 0 means whole numbers, -1 means round to the nearest 10.",
-steps:[{t:"Round to 2 decimal places",d:"=ROUND(3.14159, 2) returns 3.14. The 2nd argument sets how many decimal digits to keep."},{t:"Round to whole number",d:"=ROUND(3.7, 0) returns 4. =ROUND(3.2, 0) returns 3. Standard rounding rules apply."},{t:"Round to tens or hundreds",d:"=ROUND(1247, -1) returns 1250. =ROUND(1247, -2) returns 1200. Negative numbers round to left of decimal."},{t:"ROUNDUP for billing",d:"=ROUNDUP(2.1, 0) returns 3. Always rounds away from zero — great for hours billed, boxes needed, etc."},{t:"ROUNDDOWN for floors",d:"=ROUNDDOWN(2.9, 0) returns 2. Always rounds toward zero — great for 'completed full units'."}],
-formulas:[{s:"=ROUND(A1,2)",d:"Round to 2 decimal places"},{s:"=ROUNDUP(A1,0)",d:"Round up to nearest whole number"},{s:"=ROUNDDOWN(A1,0)",d:"Round down to nearest whole number"}],
-tip:"Never rely on cell formatting to hide extra decimals in financial models — use ROUND in your formulas so totals match displayed values exactly.",
-imgs:["excel ROUND function decimal places","excel ROUNDUP ROUNDDOWN formula","excel rounding numbers precision"]},
-
-"Number & Date Formats":{lv:"beginner",c:"#22C55E",sub:"Display values the way you want",
-explain:"Excel stores every number as a raw value but lets you control exactly how it's <strong>displayed</strong> using formats. The number 0.25 can appear as 25%, $0.25, or just 0. A date serial like 45678 can display as 28/05/2026, May 26, or 26-May-26 — all without changing the underlying data.",
-steps:[{t:"Open Format Cells dialog",d:"Select cells and press Ctrl+1. The Number tab lets you pick from Categories: Number, Currency, Date, Percentage, etc."},{t:"Apply currency format",d:"Select numbers, click the $ button on the Home tab, or Ctrl+1 → Currency. Adjust decimal places as needed."},{t:"Apply percentage format",d:"Select decimal values (e.g. 0.25), click the % button. Excel multiplies by 100 and adds the % symbol."},{t:"Custom date display",d:"Ctrl+1 → Date, or type a custom code like dd-mmm-yyyy in the Custom category (e.g. 28-May-2026)."},{t:"Custom number formats",d:"Ctrl+1 → Custom. Type #,##0.00 for thousands separator with 2 decimals, or 0.0% for percentage with 1 decimal."}],
-formulas:[],
-tip:"Ctrl+Shift+$ applies currency format instantly. Ctrl+Shift+% applies percentage. Ctrl+Shift+# applies date format.",
-imgs:["excel format cells dialog number category","excel number date currency format","excel custom number format code"]},
-
-"Conditional Formatting Basics":{lv:"beginner",c:"#22C55E",sub:"Automatically highlight important data",
-explain:"<strong>Conditional Formatting</strong> automatically colors, icons, or bars cells based on their values. It makes patterns and outliers visible instantly without any formulas. It's one of the quickest ways to turn a plain data table into an actionable visual report.",
-steps:[{t:"Highlight cells greater than a value",d:"Select data → Home → Conditional Formatting → Highlight Cell Rules → Greater Than. Enter a threshold and choose a color."},{t:"Apply a color scale",d:"Home → Conditional Formatting → Color Scales. Cells shade from red (low) to green (high) proportionally."},{t:"Add data bars",d:"Home → Conditional Formatting → Data Bars. Each cell gets a bar proportional to its value — like a built-in mini chart."},{t:"Add icon sets",d:"Home → Conditional Formatting → Icon Sets. Traffic lights, arrows, or stars show status at a glance."},{t:"Manage and edit rules",d:"Home → Conditional Formatting → Manage Rules to see, edit, reorder, or delete all rules on a sheet."}],
-formulas:[],
-tip:"Stack multiple rules on the same range. Use 'Stop If True' on a higher-priority rule to prevent lower rules from firing when the top condition is met.",
-imgs:["excel conditional formatting color scale","excel data bars icon sets rules","excel conditional formatting highlight cells"]},
-
-"TODAY & NOW":{lv:"beginner",c:"#22C55E",sub:"Work with live dates and timestamps",
-explain:"<strong>TODAY()</strong> returns today's date, updating every time the file opens. <strong>NOW()</strong> returns the current date and time. Both take no arguments. They're essential for age calculations, deadline countdowns, and auto-dating reports.",
-steps:[{t:"Insert today's date",d:"Click a cell and type =TODAY(). It shows today's date and automatically updates to tomorrow when you open the file next day."},{t:"Insert current date and time",d:"=NOW() shows both the date and the current time, e.g. 28/05/2026 14:35."},{t:"Days until a deadline",d:"=A1-TODAY() where A1 is a future date. Format the result as a Number to see the countdown in days."},{t:"Calculate age",d:"=DATEDIF(B2,TODAY(),\"Y\") where B2 is a birthdate returns the age in completed years."},{t:"Static timestamp",d:"Press Ctrl+; to insert a fixed (non-updating) date, or Ctrl+Shift+; for the fixed current time."}],
-formulas:[{s:"=TODAY()",d:"Current date (updates daily)"},{s:"=NOW()",d:"Current date and time"},{s:"=A1-TODAY()",d:"Days until date in A1"}],
-tip:"TODAY() and NOW() are volatile — they recalculate whenever anything changes. For large workbooks, use Ctrl+; for static dates to avoid slowdowns.",
-imgs:["excel TODAY NOW function live date","excel calculate days deadline formula","excel date time formula today"]},
-
-"Creating Your First Chart":{lv:"beginner",c:"#22C55E",sub:"Visualise data in one click",
-explain:"Charts transform rows of numbers into instant visual insight. Excel's <strong>Recommended Charts</strong> analyses your data and suggests the best chart type automatically. A good chart communicates the story in your data at a glance.",
-steps:[{t:"Select your data",d:"Highlight your data range including headers. One column of labels, one or more columns of values works best."},{t:"Insert a Recommended Chart",d:"Insert tab → Charts → Recommended Charts. Excel previews several options suited to your data."},{t:"Choose your chart type",d:"Column, Bar, Line, and Pie are the most common. Click any to see a preview before confirming."},{t:"Add and format elements",d:"Click the chart, then the + button that appears. Toggle Data Labels, Title, Gridlines, Legend on or off."},{t:"Move and resize",d:"Drag the chart to reposition it. Drag corner handles to resize. Right-click → Move Chart to place it on its own sheet."}],
-formulas:[],
-tip:"Click the paintbrush icon next to a selected chart to quickly browse style and color presets — much faster than manual formatting.",
-imgs:["excel insert chart recommended types","excel bar column chart creation","excel chart format design tab"]},
-
-"VLOOKUP The Classic Lookup":{lv:"intermediate",c:"#EAB308",sub:"Search a table and return a matching value",
-explain:"<strong>VLOOKUP</strong> searches the first column of a table for a value, then returns a value from a specified column in the same row. The four arguments are: what to find, where to look, which column to return, and whether to match exactly (always use FALSE for exact matching).",
-steps:[{t:"Understand the arguments",d:"=VLOOKUP(what, table, column_number, FALSE). The FALSE at the end means exact match — always include it."},{t:"Write your first VLOOKUP",d:"=VLOOKUP(A2, $F$2:$H$100, 2, FALSE) — search column F for A2's value, return the value from the 2nd column of the table."},{t:"Lock the table range",d:"Always use $F$2:$H$100 (absolute references) for the table so it doesn't shift when you copy the formula down."},{t:"Handle #N/A errors",d:"Wrap in IFERROR: =IFERROR(VLOOKUP(A2,$F$2:$H$100,2,FALSE),\"Not Found\") to show friendly text instead of an error."},{t:"Understand the limitation",d:"VLOOKUP can only return values to the RIGHT of the lookup column. For left-lookups, use XLOOKUP or INDEX+MATCH."}],
-formulas:[{s:"=VLOOKUP(A2,$F$2:$H$100,2,FALSE)",d:"Find A2 in column F, return column 2 of the table"},{s:"=IFERROR(VLOOKUP(A2,$F$2:$H$100,2,FALSE),\"–\")",d:"Return dash if not found"}],
-tip:"The most common VLOOKUP mistake is forgetting the FALSE argument — without it, Excel does an approximate match which gives wrong results on unsorted data.",
-imgs:["excel VLOOKUP formula table lookup","excel VLOOKUP column index exact match","excel VLOOKUP IFERROR not found"]},
-
-"XLOOKUP Modern Lookup":{lv:"intermediate",c:"#EAB308",sub:"The smarter replacement for VLOOKUP",
-explain:"<strong>XLOOKUP</strong> (Excel 365/2021+) fixes every limitation of VLOOKUP. It can look left or right, returns any column without a number, has a built-in not-found handler, and can return multiple columns at once. If you're on a modern Excel version, use XLOOKUP exclusively.",
-steps:[{t:"Basic XLOOKUP",d:"=XLOOKUP(A2, F2:F100, G2:G100) — find A2 in F2:F100 and return the corresponding value from G2:G100."},{t:"Set a not-found value",d:"=XLOOKUP(A2, F2:F100, G2:G100, \"Not Found\") — the 4th argument shows when no match exists. No IFERROR needed."},{t:"Look to the left",d:"=XLOOKUP(A2, C2:C100, A2:A100) — the return column is to the LEFT of the lookup column. VLOOKUP can't do this."},{t:"Return multiple columns",d:"=XLOOKUP(A2, F:F, G:I) returns 3 columns simultaneously — the result spills into adjacent cells automatically."},{t:"Match mode options",d:"5th argument: 0=exact (default), -1=exact or next smaller (grades/rates), 1=exact or next larger, 2=wildcard."}],
-formulas:[{s:"=XLOOKUP(A2,F:F,G:G,\"Not Found\")",d:"Basic XLOOKUP with fallback"},{s:"=XLOOKUP(A2,F:F,G:I,\"–\",0)",d:"Return 3 columns on exact match"}],
-tip:"If you're on Excel 365, just learn XLOOKUP and skip VLOOKUP entirely. It's strictly better in every dimension.",
-imgs:["excel XLOOKUP formula modern replacement","excel XLOOKUP return column left right","excel XLOOKUP multiple columns spill"]},
-
-"INDEX & MATCH":{lv:"intermediate",c:"#EAB308",sub:"The most flexible lookup combination",
-explain:"<strong>INDEX</strong> returns the value at a specific row/column position in a range. <strong>MATCH</strong> finds the position of a value in a range. Combined, INDEX+MATCH performs lookups in any direction, supports multiple criteria, and is often faster than VLOOKUP on large data.",
-steps:[{t:"Understand MATCH",d:"=MATCH(\"Apple\", A1:A10, 0) returns the row number of 'Apple' in A1:A10. The 0 means exact match."},{t:"Understand INDEX",d:"=INDEX(B1:B10, 3) returns the 3rd value in B1:B10 — like asking 'give me item #3 from this list'."},{t:"Combine them",d:"=INDEX(B1:B10, MATCH(\"Apple\",A1:A10,0)) — MATCH finds Apple's row number, INDEX fetches the value in column B at that row."},{t:"Lock your references",d:"Use absolute references: =INDEX($B$1:$B$100, MATCH(A2,$A$1:$A$100,0)) so the formula copies correctly."},{t:"Two-way lookup",d:"=INDEX(B2:D10, MATCH(G1,A2:A10,0), MATCH(H1,B1:D1,0)) — look up both a row and a column header simultaneously."}],
-formulas:[{s:"=INDEX(B:B,MATCH(A2,A:A,0))",d:"Look up A2 in column A, return from column B"},{s:"=INDEX(B2:D10,MATCH(G1,A2:A10,0),MATCH(H1,B1:D1,0))",d:"Two-way row and column lookup"}],
-tip:"INDEX+MATCH is more flexible than VLOOKUP because the lookup column can be anywhere — it doesn't have to be the leftmost column of your table.",
-imgs:["excel INDEX MATCH formula combination","excel INDEX MATCH two-way lookup table","excel INDEX MATCH vs VLOOKUP comparison"]},
-
-"IF Statement Basics":{lv:"intermediate",c:"#EAB308",sub:"Make decisions in your formulas",
-explain:"The <strong>IF</strong> function tests a condition and returns one value if TRUE and another if FALSE. It's the core of all logic in Excel. The structure is always the same: test → what to do if yes → what to do if no.",
-steps:[{t:"Write a basic IF",d:"=IF(A1>100, \"Over Budget\", \"OK\") — if A1 exceeds 100, show 'Over Budget', otherwise show 'OK'."},{t:"Return a number",d:"=IF(B2=\"Yes\", 50, 0) — returns 50 when B2 contains 'Yes', otherwise 0. Useful for conditional calculations."},{t:"Nest IF for multiple outcomes",d:"=IF(A1>90,\"A\",IF(A1>75,\"B\",IF(A1>60,\"C\",\"Fail\"))) — chain conditions for grade bands."},{t:"Combine with AND",d:"=IF(AND(A1>50,B1>50),\"Both pass\",\"Fail\") — both conditions must be TRUE for the first result."},{t:"Combine with OR",d:"=IF(OR(A1>100,B1>100),\"Bonus eligible\",\"Standard\") — either condition triggers the TRUE result."}],
-formulas:[{s:"=IF(A1>100,\"High\",\"Low\")",d:"Basic condition test"},{s:"=IF(AND(A1>50,B1>50),\"Pass\",\"Fail\")",d:"Both conditions must be true"},{s:"=IF(A1>90,\"A\",IF(A1>75,\"B\",\"C\"))",d:"Nested IF grade bands"}],
-tip:"Use IFS() for cleaner code when you have more than 3 conditions — it avoids the deeply nested IF mess.",
-imgs:["excel IF function formula condition","excel nested IF formula grade system","excel IF AND OR logical formula"]},
-
-"COUNTIF & COUNTIFS":{lv:"intermediate",c:"#EAB308",sub:"Count cells that meet your conditions",
-explain:"<strong>COUNTIF</strong> counts cells matching a single condition. <strong>COUNTIFS</strong> counts cells matching multiple conditions simultaneously. These are essential for any categorised analysis — how many sales were over $500, how many items are in a specific region.",
-steps:[{t:"Basic COUNTIF",d:"=COUNTIF(A1:A100,\"Apple\") counts how many cells contain exactly 'Apple'. Text matching is not case-sensitive."},{t:"COUNTIF with comparison operator",d:"=COUNTIF(B:B,\">500\") counts all cells greater than 500. Put the operator inside quotes: \">\", \">=\", \"<\", \"<>\"."},{t:"COUNTIF with wildcard",d:"=COUNTIF(A:A,\"App*\") counts cells starting with 'App' — matches Apple, Application, Approved."},{t:"COUNTIFS with two criteria",d:"=COUNTIFS(A:A,\"East\",B:B,\">500\") counts rows where region is East AND value exceeds 500."},{t:"Count dates in a range",d:"=COUNTIFS(C:C,\">=\"&D1,C:C,\"<=\"&E1) counts dates between D1 and E1. Use & to join the operator with the cell reference."}],
-formulas:[{s:"=COUNTIF(A:A,\"Apple\")",d:"Count exact text matches"},{s:"=COUNTIF(B:B,\">500\")",d:"Count values exceeding 500"},{s:"=COUNTIFS(A:A,\"East\",B:B,\">500\")",d:"Two-condition count"}],
-tip:"COUNTIF is not case-sensitive. For case-sensitive counting, use =SUMPRODUCT((EXACT(A1:A100,\"apple\"))*1).",
-imgs:["excel COUNTIF formula criteria range","excel COUNTIFS multiple conditions","excel COUNTIF wildcard comparison operator"]},
-
-"SUMIF & SUMIFS":{lv:"intermediate",c:"#EAB308",sub:"Sum values that match your conditions",
-explain:"<strong>SUMIF</strong> sums values where one condition is met. <strong>SUMIFS</strong> sums values where multiple conditions are all met. These are the core functions of any financial or sales reporting model.",
-steps:[{t:"Basic SUMIF",d:"=SUMIF(A:A,\"East\",B:B) — for every row where A says 'East', add the corresponding value in B."},{t:"SUMIF with comparison",d:"=SUMIF(B:B,\">1000\",C:C) — sum column C for every row where column B exceeds 1000."},{t:"SUMIF with a cell reference",d:"=SUMIF(A:A,E1,B:B) — sum B where A matches whatever is in E1. Far more flexible than hardcoding."},{t:"SUMIFS — two conditions",d:"=SUMIFS(C:C,A:A,\"East\",B:B,\">500\") — sum C where A is 'East' AND B is over 500. Note: sum range is FIRST in SUMIFS."},{t:"Dynamic date range sum",d:"=SUMIFS(C:C,D:D,\">=\"&F1,D:D,\"<=\"&G1) — sum C for dates falling between F1 and G1."}],
-formulas:[{s:"=SUMIF(A:A,\"East\",B:B)",d:"Sum B where A equals 'East'"},{s:"=SUMIFS(C:C,A:A,\"East\",B:B,\">500\")",d:"Sum C matching two criteria"}],
-tip:"SUMIFS argument order differs from SUMIF — in SUMIFS the sum_range is the FIRST argument. This is a very common source of errors.",
-imgs:["excel SUMIF formula criteria sum range","excel SUMIFS multiple conditions sum","excel SUMIF sales analysis report"]},
-
-"LEFT RIGHT MID":{lv:"intermediate",c:"#EAB308",sub:"Extract parts of text strings",
-explain:"<strong>LEFT</strong> extracts characters from the start of text. <strong>RIGHT</strong> extracts from the end. <strong>MID</strong> extracts from the middle. Combined with <strong>FIND</strong> and <strong>LEN</strong>, these three functions can split any text — names, codes, addresses — into clean components.",
-steps:[{t:"Extract first N characters",d:"=LEFT(A1, 3) returns the first 3 characters. 'John Smith' → 'Joh'. Useful for codes, prefixes."},{t:"Extract last N characters",d:"=RIGHT(A1, 4) returns the last 4 characters. 'ABC-1234' → '1234'. Useful for IDs, suffixes."},{t:"Extract from the middle",d:"=MID(A1, 6, 5) starts at position 6 and returns 5 characters. Perfect for fixed-format data."},{t:"Extract first name dynamically",d:"=LEFT(A1, FIND(\" \",A1)-1) finds the space and returns everything before it."},{t:"Extract last name dynamically",d:"=MID(A1, FIND(\" \",A1)+1, LEN(A1)) returns everything after the first space."}],
-formulas:[{s:"=LEFT(A1,3)",d:"First 3 characters"},{s:"=RIGHT(A1,4)",d:"Last 4 characters"},{s:"=LEFT(A1,FIND(\" \",A1)-1)",d:"Extract first word/name"}],
-tip:"Combine FIND with LEFT/RIGHT/MID to handle variable-length strings dynamically rather than hardcoding character positions.",
-imgs:["excel LEFT RIGHT MID text function","excel extract text string formula","excel FIND LEN text split name"]},
-
-"TRIM SUBSTITUTE REPLACE":{lv:"intermediate",c:"#EAB308",sub:"Clean messy imported data",
-explain:"Imported data is often dirty — extra spaces, wrong characters, inconsistent codes. <strong>TRIM</strong> removes leading, trailing, and double-internal spaces. <strong>SUBSTITUTE</strong> replaces every instance of a character. <strong>REPLACE</strong> replaces characters at a specific position.",
-steps:[{t:"Remove extra spaces",d:"=TRIM(A1) removes all leading and trailing spaces and collapses multiple internal spaces to one."},{t:"Replace all instances of text",d:"=SUBSTITUTE(A1,\"old\",\"new\") replaces every 'old' with 'new'. Case-sensitive."},{t:"Replace only the Nth occurrence",d:"=SUBSTITUTE(A1,\"-\",\":\",2) replaces only the 2nd hyphen with a colon. The 4th argument specifies which instance."},{t:"Remove non-breaking spaces",d:"=TRIM(SUBSTITUTE(A1,CHAR(160),\" \")) — CHAR(160) is the invisible non-breaking space that often comes from web pages."},{t:"REPLACE by position",d:"=REPLACE(A1,1,3,\"XX\") replaces the first 3 characters with 'XX'. Useful for redacting or reformatting codes."}],
-formulas:[{s:"=TRIM(A1)",d:"Remove extra spaces"},{s:"=SUBSTITUTE(A1,\"old\",\"new\")",d:"Replace all instances"},{s:"=TRIM(SUBSTITUTE(A1,CHAR(160),\" \"))",d:"Remove non-breaking spaces"}],
-tip:"After cleaning data with formulas, paste the results as Values (Ctrl+Alt+V → V) to remove the formula dependency and lock in the clean data.",
-imgs:["excel TRIM remove extra spaces","excel SUBSTITUTE replace text function","excel data cleaning text formula"]},
-
-"Creating a Pivot Table":{lv:"intermediate",c:"#EAB308",sub:"Summarise thousands of rows instantly",
-explain:"A <strong>Pivot Table</strong> summarises large datasets into a compact interactive report — no formulas needed. You drag fields into Rows, Columns, Values, and Filters areas. It can group, aggregate, filter, and rearrange your analysis in seconds.",
-steps:[{t:"Prepare your source data",d:"Data should have one header row, no blank rows or columns, and consistent data types in each column."},{t:"Insert a Pivot Table",d:"Click inside your data. Insert → PivotTable → From Table/Range. Choose where to place it (new or existing sheet)."},{t:"Drag fields into areas",d:"In the Field List panel: drag category fields to Rows/Columns, numeric fields to Values, filter fields to Filters."},{t:"Change the value calculation",d:"Click a field in Values → Value Field Settings. Change SUM to Count, Average, Max, Min, or % of Total."},{t:"Refresh after data changes",d:"Right-click the Pivot Table → Refresh. Or Data tab → Refresh All. Always refresh after adding rows to source data."}],
-formulas:[],
-tip:"Double-click any summary value in a Pivot Table — Excel creates a new sheet showing all the underlying source rows that make up that number.",
-imgs:["excel pivot table create insert","excel pivot table field list rows columns","excel pivot table value field settings refresh"]},
-
-"Sort & Filter":{lv:"intermediate",c:"#EAB308",sub:"Organise and find data quickly",
-explain:"<strong>Sort</strong> reorders rows based on one or more columns. <strong>AutoFilter</strong> (Ctrl+Shift+L) hides rows that don't match your criteria — like a temporary view of your data. Both are non-destructive: your data is never deleted.",
-steps:[{t:"Quick single-column sort",d:"Click any cell in the column. Data tab → Sort A to Z or Z to A. The entire row moves with the sorted column."},{t:"Multi-level sort",d:"Data → Sort → Add Level. First sort by Department, then by Date within each department."},{t:"Enable AutoFilter",d:"Click inside your table and press Ctrl+Shift+L. Dropdown arrows appear on every header column."},{t:"Filter by specific values",d:"Click a dropdown → uncheck 'Select All' → check only the values you want. All other rows are hidden."},{t:"Filter by condition",d:"Dropdown → Number Filters or Text Filters → conditions like 'Top 10', 'Greater Than', 'Begins With'."}],
-formulas:[],
-tip:"After applying a filter, you can copy and paste only the visible rows — Excel pastes only the filtered data, skipping hidden rows automatically.",
-imgs:["excel sort data column ascending","excel autofilter dropdown header arrow","excel filter by value condition"]},
-
-"FILTER Dynamic Filtering":{lv:"advanced",c:"#F97316",sub:"Extract rows matching criteria as a spill array",
-explain:"The <strong>FILTER</strong> function (Excel 365+) returns a filtered subset of your data as a dynamic array that spills automatically. Unlike AutoFilter (manual), FILTER updates live as data changes and can be combined with other functions.",
-steps:[{t:"Basic FILTER",d:"=FILTER(A2:C100, B2:B100=\"East\") returns all rows where column B is 'East'. Result spills into as many rows as needed."},{t:"Filter with AND logic",d:"=FILTER(A2:C100, (B2:B100=\"East\")*(C2:C100>500)) — multiply conditions to AND them: both must be true."},{t:"Filter with OR logic",d:"=FILTER(A2:C100, (B2:B100=\"East\")+(B2:B100=\"West\")) — add conditions to OR them: either can be true."},{t:"Add a fallback for no results",d:"=FILTER(A2:C100, B2:B100=\"East\", \"No data\") — the 3rd argument displays when nothing matches."},{t:"Combine with SORT",d:"=SORT(FILTER(A2:C100, B2:B100=\"East\"), 3, -1) — filter first, then sort the result by column 3 descending."}],
-formulas:[{s:"=FILTER(A2:C100,B2:B100=\"East\")",d:"Return rows where B equals 'East'"},{s:"=FILTER(A:C,(B:B=\"East\")*(C:C>500),\"None\")",d:"AND condition with fallback"}],
-tip:"FILTER is fully dynamic — wrap it in other functions like SORT, UNIQUE, or TAKE to build complex data pipelines in a single formula.",
-imgs:["excel FILTER function spill dynamic","excel FILTER multiple criteria AND","excel dynamic array FILTER formula result"]},
-
-"SORT & SORTBY":{lv:"advanced",c:"#F97316",sub:"Sort data dynamically with formulas",
-explain:"<strong>SORT</strong> returns a sorted copy of a range as a spill array — it doesn't change the original data. <strong>SORTBY</strong> sorts a range using a separate column as the sort key, which doesn't even need to be in your output.",
-steps:[{t:"Basic SORT ascending",d:"=SORT(A2:C100) sorts by the first column ascending. The result spills into adjacent cells."},{t:"Sort by specific column",d:"=SORT(A2:C100, 2, 1) sorts by the 2nd column ascending (1=ascending, -1=descending)."},{t:"Sort descending",d:"=SORT(A2:C100, 3, -1) sorts by column 3 descending — perfect for ranking tables."},{t:"Multi-level sort",d:"=SORT(A2:C100, {1,2}, {1,-1}) sorts by column 1 ascending, then column 2 descending."},{t:"SORTBY with external key",d:"=SORTBY(A2:B100, C2:C100, -1) sorts A:B by the values in C (column C not included in output)."}],
-formulas:[{s:"=SORT(A2:C100,3,-1)",d:"Sort by column 3 descending"},{s:"=SORTBY(A2:B100,C2:C100,-1)",d:"Sort A:B using C as the key"}],
-tip:"=SORT(UNIQUE(A:A)) gives you a sorted, deduplicated list — one of the most useful two-function combos in modern Excel.",
-imgs:["excel SORT function dynamic spill","excel SORTBY formula key column","excel SORT descending ranking"]},
-
-"UNIQUE Remove Duplicates":{lv:"advanced",c:"#F97316",sub:"Extract distinct values dynamically",
-explain:"The <strong>UNIQUE</strong> function returns each distinct value from a range exactly once, as a dynamic spill array. It automatically updates when the source data changes — replacing the manual Remove Duplicates dialog for live reference lists.",
-steps:[{t:"Get unique values",d:"=UNIQUE(A2:A100) returns each distinct value from A2:A100 once, as a spilled vertical list."},{t:"Unique rows (multiple columns)",d:"=UNIQUE(A2:C100) returns unique combinations across all three columns."},{t:"Values appearing exactly once",d:"=UNIQUE(A2:A100,,TRUE) — the third argument TRUE returns only values that appear once (genuinely unique, not just distinct)."},{t:"Count distinct values",d:"=COUNTA(UNIQUE(A2:A100)) wraps UNIQUE in COUNTA to count how many unique entries exist."},{t:"Sorted unique list",d:"=SORT(UNIQUE(A2:A100)) returns a sorted, deduplicated list — ideal as a dropdown source."}],
-formulas:[{s:"=UNIQUE(A2:A100)",d:"List each distinct value once"},{s:"=SORT(UNIQUE(A2:A100))",d:"Sorted distinct list"},{s:"=COUNTA(UNIQUE(A2:A100))",d:"Count of distinct values"}],
-tip:"Use =SORT(UNIQUE(A:A)) as the Data Validation source for a dropdown. It stays up to date automatically as new values are added.",
-imgs:["excel UNIQUE function distinct list","excel UNIQUE SORT dynamic list","excel UNIQUE COUNTA count formula"]},
-
-"LET & LAMBDA Functions":{lv:"advanced",c:"#F97316",sub:"Write cleaner, reusable formulas",
-explain:"<strong>LET</strong> assigns names to intermediate values inside a formula — making complex formulas readable and faster (each named value is calculated once). <strong>LAMBDA</strong> lets you define custom reusable functions without writing VBA code.",
-steps:[{t:"Use LET for readability",d:"=LET(x, A1+B1, y, C1*D1, x+y) — x and y are named expressions; the last argument is what the formula returns."},{t:"Use LET for performance",d:"If the same expensive sub-calculation appears multiple times, LET calculates it once and reuses the result."},{t:"Define a LAMBDA",d:"=LAMBDA(a,b,a*b) defines a function taking two inputs and returning their product."},{t:"Save LAMBDA as a named function",d:"Formulas → Name Manager → New. Set the name to 'Tax' and formula to =LAMBDA(price, price*1.2). Now =Tax(A1) works anywhere."},{t:"Use LAMBDA with multiple params",d:"=LAMBDA(price,rate,price*(1+rate)) creates a reusable markup calculator: =Markup(A1, 0.15)."}],
-formulas:[{s:"=LET(tot,SUM(A:A),avg,AVERAGE(A:A),tot/avg)",d:"Named variables for clarity and performance"},{s:"=LAMBDA(x,x^2+2*x+1)",d:"Custom polynomial function"}],
-tip:"LET dramatically speeds up formulas that reference the same expensive expression multiple times — it's calculated once and the name is substituted everywhere.",
-imgs:["excel LET function named variable formula","excel LAMBDA custom function named range","excel LET LAMBDA modern formula"]},
-
-"Goal Seek":{lv:"advanced",c:"#F97316",sub:"Work backwards from a target result",
-explain:"<strong>Goal Seek</strong> answers: 'what input do I need to produce this specific output?' You pick a formula cell, set a target value, and tell Excel which input cell to change — it iterates to find the answer automatically.",
-steps:[{t:"Build your formula model",d:"You need a formula cell that depends on an input cell. Example: a loan repayment in B5 that depends on the interest rate in B2."},{t:"Open Goal Seek",d:"Data tab → What-If Analysis → Goal Seek."},{t:"Configure the dialog",d:"'Set cell' = your formula cell. 'To value' = your target number. 'By changing cell' = the input cell Excel should adjust."},{t:"Run it",d:"Click OK. Excel iterates through thousands of values to find the input that hits your target."},{t:"Accept or revert",d:"Click OK to keep the solved value, or Cancel to restore the original input."}],
-formulas:[],
-tip:"Goal Seek adjusts only one input cell. For multiple variable optimization (e.g. maximize profit within constraints), use Data → Solver instead.",
-imgs:["excel goal seek what if analysis dialog","excel goal seek loan payment target","excel goal seek solver data tab"]},
-
-"Recording & Running Macros":{lv:"expert",c:"#EF4444",sub:"Automate repetitive tasks with one click",
-explain:"A <strong>Macro</strong> is a recorded set of actions that can be replayed instantly. The Macro Recorder watches what you do and writes the VBA code automatically — no programming knowledge needed to get started. It's the fastest introduction to automation.",
-steps:[{t:"Enable the Developer tab",d:"File → Options → Customize Ribbon → check Developer. The Developer tab now appears in the Ribbon."},{t:"Record a macro",d:"Developer → Record Macro. Name it (no spaces), optionally assign a keyboard shortcut, choose where to store it, click OK."},{t:"Perform your actions",d:"Do the steps you want to automate: format cells, apply formulas, sort, filter, etc. Excel records every action."},{t:"Stop recording",d:"Developer → Stop Recording (or click the blue square in the Status Bar). Your macro is now saved."},{t:"Run your macro",d:"Developer → Macros → select your macro → Run. Or press the shortcut key you assigned."}],
-formulas:[],
-tip:"After recording, press Alt+F11 to open the VBA Editor and read the generated code. Studying recorded code is the fastest way to learn VBA syntax.",
-imgs:["excel macro recorder developer tab","excel record macro dialog VBA","excel run macro button assign shortcut"]},
-
-"Variables Loops & Conditionals":{lv:"expert",c:"#EF4444",sub:"Control the flow of your VBA programs",
-explain:"Three building blocks make VBA powerful: <strong>variables</strong> store data, <strong>loops</strong> repeat actions for every row or cell, and <strong>conditionals</strong> (If/Then) make decisions. Together they let you automate virtually any task that involves working through rows of data.",
-steps:[{t:"Declare a variable",d:"Dim total As Double — creates a variable named 'total'. Use Long for integers, String for text, Boolean for true/false."},{t:"Read and write cell values",d:"total = Range(\"A1\").Value reads A1 into a variable. Cells(2,1).Value = total writes the variable to A2."},{t:"Write an If statement",d:"If total > 100 Then MsgBox \"High\" Else MsgBox \"Low\" End If — executes different code based on the condition."},{t:"Write a For Next loop",d:"For i = 1 To 10 : Cells(i,1).Value = i*2 : Next i — writes 2,4,6...20 into cells A1:A10."},{t:"Write a For Each loop",d:"For Each cell In Range(\"A1:A50\") : cell.Value = cell.Value * 1.1 : Next cell — increases all values by 10%."}],
-formulas:[{s:"Dim x As Long",d:"Declare an integer variable"},{s:"For i=1 To 100 : Cells(i,1)=i : Next i",d:"Write values to 100 rows"}],
-tip:"Add Option Explicit at the top of every VBA module — it forces you to declare all variables, catching typos that would otherwise create silent bugs.",
-imgs:["excel VBA variables declare type","excel VBA for loop iterate cells","excel VBA if then else conditional logic"]},
-
-"Building a Data Model":{lv:"expert",c:"#EF4444",sub:"Connect multiple tables without VLOOKUP",
-explain:"The <strong>Data Model</strong> (Power Pivot) lets you load multiple tables and define <strong>relationships</strong> between them, like a database. Your Pivot Tables can then draw fields from any table simultaneously — no VLOOKUP columns needed.",
-steps:[{t:"Add tables to the Data Model",d:"Click inside a table → Power Pivot tab → Add to Data Model. Repeat for each table you want to join."},{t:"Open Power Pivot",d:"Power Pivot tab → Manage. The Power Pivot window shows all loaded tables as separate tabs."},{t:"Create a relationship",d:"In Power Pivot → Diagram View, drag a column (e.g. CustomerID) from one table to the matching column in another."},{t:"Build a cross-table Pivot Table",d:"Insert → PivotTable → check 'Use this workbook's Data Model'. All model tables appear in the field list together."},{t:"Use fields from multiple tables",d:"Drag fields from different tables into your Pivot Table — the relationships you defined handle the joins automatically."}],
-formulas:[],
-tip:"A well-designed Data Model replaces dozens of VLOOKUP columns. Set it up once and every Pivot Table in the workbook benefits.",
-imgs:["excel power pivot data model tables","excel power pivot diagram view relationships","excel data model pivot table multiple tables"]},
-
-"CALCULATE Core DAX":{lv:"expert",c:"#EF4444",sub:"The most powerful DAX function",
-explain:"<strong>CALCULATE</strong> is the heart of DAX. It evaluates an expression in a modified filter context — meaning it can override Pivot Table filters to compute things like 'all-region total' even while you're filtering on one region. Nearly every useful DAX measure uses CALCULATE.",
-steps:[{t:"Basic CALCULATE",d:"Total = CALCULATE(SUM(Sales[Amount])) — same as SUM here, but enables context modification with added filters."},{t:"Add a fixed filter",d:"East Sales = CALCULATE(SUM(Sales[Amount]), Sales[Region]=\"East\") — always shows East regardless of slicer selections."},{t:"Remove all filters with ALL",d:"Share = DIVIDE(SUM(Sales[Amount]), CALCULATE(SUM(Sales[Amount]), ALL(Sales))) — denominator ignores all Pivot Table filters."},{t:"Year-to-date calculation",d:"YTD = CALCULATE(SUM(Sales[Amount]), DATESYTD('Calendar'[Date])) — uses built-in time intelligence."},{t:"Same period last year",d:"LY = CALCULATE(SUM(Sales[Amount]), SAMEPERIODLASTYEAR('Calendar'[Date])) — comparison to prior year."}],
-formulas:[{s:"East = CALCULATE(SUM(Sales[Revenue]),Sales[Region]=\"East\")",d:"Fixed region filter"},{s:"YTD = CALCULATE(SUM(Sales[Revenue]),DATESYTD('Date'[Date]))",d:"Year to date"}],
-tip:"Every advanced DAX measure ultimately uses CALCULATE. Mastering filter context — what it is and how CALCULATE modifies it — is the key to mastering DAX.",
-imgs:["excel DAX CALCULATE measure formula","excel power pivot DAX measure filter","excel CALCULATE ALL context DAX"]},
-
-"Dashboard Design Principles":{lv:"expert",c:"#EF4444",sub:"Build professional interactive dashboards",
-explain:"A great Excel <strong>dashboard</strong> tells a clear story at a glance. The best ones follow a few key principles: clear visual hierarchy, consistent color palette, minimal clutter, and interactive elements (slicers, dropdowns) that let users explore data themselves.",
-steps:[{t:"Plan before you build",d:"Sketch the layout on paper first: where are the KPI numbers, charts, filters? Planning prevents painful restructuring later."},{t:"Use a dedicated dashboard sheet",d:"Keep raw data on separate sheets. The dashboard sheet has only charts, shapes, and summary formulas — no data tables."},{t:"Establish a consistent color palette",d:"Pick 2–3 colors maximum. One for positives, one for negatives, gray for supporting info. Consistency looks professional."},{t:"Add interactive slicers",d:"Connect slicers to your Pivot Tables so users filter by region, period, or category with one click."},{t:"Hide the grid",d:"View → uncheck Gridlines and Headings. Set a background color. This makes the dashboard feel designed, not built."}],
-formulas:[],
-tip:"Use the Camera Tool (add it via Quick Access Toolbar) to create live snapshots of any cell range that update automatically — perfect for KPI cards.",
-imgs:["excel dashboard professional design layout","excel KPI dashboard slicers interactive","excel dashboard chart formatting clean"]},
-
+const L={
+"The Excel Interface":{lv:"beginner",c:"#22C55E",sub:"Navigate Excel's workspace",ex:"Excel's workspace has three zones: the <strong>Ribbon</strong> (toolbar), the <strong>cell grid</strong> (columns A–XFD, rows 1–1,048,576), and the <strong>Formula Bar</strong> (shows/edits cell contents). The <strong>Name Box</strong> shows the active cell address. The <strong>Status Bar</strong> at the bottom shows instant stats.",steps:[{t:"Open a blank workbook",d:"Launch Excel → Blank Workbook. You'll see a grid — columns labeled A, B, C... rows numbered 1, 2, 3..."},{t:"Click a cell",d:"Click B3. The Name Box top-left shows 'B3' and the cell gets a green border — the active cell."},{t:"Explore Ribbon tabs",d:"Click Home, Insert, Formulas, Data, Review, View — each groups related commands."},{t:"Type and confirm",d:"Type 'Hello' in a cell — it appears in both the cell and Formula Bar. Press Enter to confirm."},{t:"Check the Status Bar",d:"Select a range of numbers — Sum, Average, Count appear instantly at the bottom right."}],fm:[],tip:"Ctrl+Home jumps to A1. Ctrl+End jumps to the last used cell. These two save a lot of scrolling.",imgs:["excel spreadsheet interface overview","excel ribbon formula bar","excel name box status bar"]},
+"Ribbon & Tabs":{lv:"beginner",c:"#22C55E",sub:"Master Excel's command toolbar",ex:"The <strong>Ribbon</strong> organises all commands into tabs. <strong>Home</strong> is your daily driver — clipboard, font, alignment, number formats. <strong>Insert</strong> adds charts/tables. <strong>Data</strong> has sort/filter/analysis. You can pin favourites to the Quick Access Toolbar.",steps:[{t:"Tour each tab",d:"Click Home, Insert, Page Layout, Formulas, Data, Review, View to see what's available."},{t:"Home tab essentials",d:"Clipboard (copy/paste), Font, Alignment, Number, Styles — covers 80% of daily tasks."},{t:"Quick Access Toolbar",d:"Right-click any button → 'Add to Quick Access Toolbar'. Pins it above the Ribbon permanently."},{t:"Collapse Ribbon",d:"Double-click any tab to hide the Ribbon and gain screen space. Double-click to restore."},{t:"Keyboard navigate",d:"Press Alt — key tips appear on every button so you can reach any command by keyboard."}],fm:[],tip:"Right-click Ribbon → Customize → check 'Developer' to unlock macro recording and form controls.",imgs:["excel ribbon tabs groups","excel quick access toolbar","excel alt key tips keyboard"]},
+"Worksheets & Workbooks":{lv:"beginner",c:"#22C55E",sub:"Organise data across sheets and files",ex:"A <strong>Workbook</strong> is the Excel file (.xlsx). Inside are <strong>Worksheets</strong> — the tabs at the bottom. Think of the workbook as a binder and sheets as pages inside. You can reference data across sheets in formulas.",steps:[{t:"Add a sheet",d:"Click + next to the sheet tabs, or press Shift+F11."},{t:"Rename a sheet",d:"Double-click the tab, type a name, press Enter. Keep names short: 'Data', 'Report'."},{t:"Move or copy",d:"Right-click tab → Move or Copy. Check 'Create a copy' to duplicate the sheet."},{t:"Reference another sheet",d:"In a formula, type sheet name then !: =Sheet2!A1 pulls data from A1 on Sheet2."},{t:"Colour tabs",d:"Right-click tab → Tab Color to visually group sheets by purpose."}],fm:[{s:"=Sheet2!A1",d:"Pull value from A1 on Sheet2"},{s:"='Sales Data'!B5",d:"Sheet name with spaces — use single quotes"}],tip:"Ctrl+Page Up / Ctrl+Page Down switches between sheet tabs instantly.",imgs:["excel worksheet tabs bottom","excel multiple sheets workbook","excel sheet tab rename colour"]},
+"Cell References":{lv:"beginner",c:"#22C55E",sub:"Relative, absolute and mixed references",ex:"Every cell address is <strong>relative</strong> (A1 — shifts when copied), <strong>absolute</strong> ($A$1 — stays fixed), or <strong>mixed</strong> ($A1 or A$1). This controls whether formulas copy correctly — one of the most important concepts in Excel.",steps:[{t:"Relative reference",d:"In B1 type =A1*2. Copy to B2 — it becomes =A2*2. The reference shifted with the row."},{t:"Absolute reference",d:"Type =A1*$D$1. Copy down — $D$1 stays locked, A1 shifts each row."},{t:"Toggle with F4",d:"Click a reference while editing, press F4: A1 → $A$1 → A$1 → $A1 → A1."},{t:"Lock column only ($A1)",d:"Column fixed, row shifts. Used in lookup tables spanning rows."},{t:"Lock row only (A$1)",d:"Row fixed, column shifts. Used for header rows spanning columns."}],fm:[{s:"=A1*B1",d:"Both references shift when copied"},{s:"=A1*$D$1",d:"D1 locked; A1 shifts"},{s:"=$A1*B$1",d:"Locks column A and row 1"}],tip:"Any single shared constant (tax rate, exchange rate) should always be referenced with $$ signs.",imgs:["excel absolute relative cell reference","excel dollar sign formula reference","excel F4 toggle reference type"]},
+"Freeze Panes & Split Views":{lv:"beginner",c:"#22C55E",sub:"Keep headers visible while scrolling",ex:"<strong>Freeze Panes</strong> locks header rows/columns so they stay visible when scrolling large datasets. <strong>Split View</strong> divides the window to view two parts of a sheet at once.",steps:[{t:"Freeze top row",d:"View → Freeze Panes → Freeze Top Row. Row 1 stays pinned as you scroll down."},{t:"Freeze first column",d:"View → Freeze Panes → Freeze First Column. Column A stays visible scrolling right."},{t:"Freeze multiple rows/columns",d:"Click the cell BELOW and RIGHT of freeze point (e.g. B2). View → Freeze Panes → Freeze Panes."},{t:"Unfreeze",d:"View → Freeze Panes → Unfreeze Panes. Removes all freeze settings."},{t:"Split view",d:"Click a cell, View → Split. Drag the split bar to adjust the dividing line."}],fm:[],tip:"A thin blue line on the sheet marks the freeze boundary — if you don't see it, no panes are frozen.",imgs:["excel freeze panes header visible","excel freeze rows columns split","excel split view two panes"]},
+"Entering & Editing Data":{lv:"beginner",c:"#22C55E",sub:"Enter data quickly and accurately",ex:"Beyond typing, Excel has smart entry shortcuts. <strong>AutoComplete</strong> suggests existing values. <strong>AutoFill</strong> extends series. <strong>Flash Fill</strong> (Ctrl+E) detects patterns and fills columns automatically. <strong>Ctrl+Enter</strong> fills multiple cells at once.",steps:[{t:"Basic entry",d:"Click cell, type, press Enter (down) or Tab (right). Press Escape to cancel."},{t:"Edit a cell",d:"Press F2 to edit in-place, or click Formula Bar. Use Home/End to navigate within text."},{t:"AutoFill series",d:"Type 1 in A1, 2 in A2, select both, drag the fill handle (small square bottom-right) downward."},{t:"Flash Fill",d:"In B1 type first name from 'John Smith' in A1. Press Ctrl+E — Excel fills all first names."},{t:"Fill many cells at once",d:"Select cells, type a value, press Ctrl+Enter — fills all selected cells simultaneously."}],fm:[],tip:"Right-click the fill handle when dragging: Fill Series, Fill Weekdays, Fill Months, Copy Cells.",imgs:["excel autofill series drag handle","excel flash fill Ctrl+E","excel data entry multiple cells"]},
+"AutoFill & Flash Fill":{lv:"beginner",c:"#22C55E",sub:"Fill patterns and series in seconds",ex:"<strong>AutoFill</strong> extends known series — numbers, dates, months, weekdays — by dragging. <strong>Flash Fill</strong> watches what you type in an adjacent column and replicates the pattern for all rows, no formula needed.",steps:[{t:"AutoFill numbers",d:"Type 1 in A1, 2 in A2. Select both, drag fill handle down to generate 3, 4, 5..."},{t:"AutoFill dates",d:"Type a date, drag fill handle. Right-click while dragging to choose: days, months, years, weekdays."},{t:"AutoFill months/weekdays",d:"Type 'Jan' and drag — Excel knows months. Type 'Mon' and drag — knows weekdays."},{t:"Flash Fill — extract",d:"If A has 'Smith, John', type 'John' in B1. Click B2, press Ctrl+E — extracts first names for every row."},{t:"Flash Fill — combine",d:"If A has first names and B has last names, type 'John Smith' in C1. Ctrl+E merges the column."}],fm:[],tip:"If Flash Fill doesn't trigger automatically, press Ctrl+E to force it. Works best when the pattern is consistent.",imgs:["excel autofill drag series","excel flash fill pattern","excel fill months dates weekdays"]},
+"Paste Special":{lv:"beginner",c:"#22C55E",sub:"Paste only what you need",ex:"<strong>Paste Special</strong> (Ctrl+Alt+V) lets you paste only values (removing formulas), only formats, transpose rows to columns, or perform arithmetic on pasted data — far more powerful than regular paste.",steps:[{t:"Paste Values only",d:"Copy cells → Ctrl+Alt+V → Values → OK. Pastes results, not formulas."},{t:"Paste Formats only",d:"Ctrl+Alt+V → Formats. Copies all formatting without changing data."},{t:"Transpose",d:"Copy a row → Ctrl+Alt+V → check Transpose → OK. Row becomes a column."},{t:"Paste and multiply",d:"Put 1.1 in a cell, copy it. Select data, Ctrl+Alt+V → Multiply. All selected cells increase by 10%."},{t:"Paste column widths",d:"Ctrl+Alt+V → Column Widths. Copies exact column widths without changing data."}],fm:[],tip:"Right-click destination after copying — hover over Paste Options icons for a live preview before committing.",imgs:["excel paste special dialog","excel paste values only","excel transpose paste special"]},
+"Find & Replace":{lv:"beginner",c:"#22C55E",sub:"Search and update data at scale",ex:"<strong>Find</strong> (Ctrl+F) locates values, text, or formulas. <strong>Replace</strong> (Ctrl+H) swaps one value for another across a sheet or entire workbook in one click. Wildcards (* and ?) enable powerful pattern matching.",steps:[{t:"Open Find",d:"Ctrl+F. Type search term, press Enter or Find Next to step through matches."},{t:"Open Replace",d:"Ctrl+H. Enter what to find and what to replace it with."},{t:"Replace All",d:"Click Replace All — swaps every occurrence at once and shows a count of replacements."},{t:"Search entire workbook",d:"Find/Replace → Options → Within: Workbook. Searches every sheet, not just the active one."},{t:"Use wildcards",d:"* matches any sequence (J* finds John, Jane). ? matches exactly one character."}],fm:[],tip:"Use 'Find All' before 'Replace All' to review every match first — prevents accidentally replacing the wrong cells.",imgs:["excel find replace Ctrl+H","excel find replace wildcard","excel replace all workbook"]},
+"SUM & AutoSum":{lv:"beginner",c:"#22C55E",sub:"Add up numbers quickly",ex:"<strong>SUM</strong> is the most-used Excel function — it adds all numbers in a range, skipping blanks and text. <strong>AutoSum</strong> (Alt+=) writes the SUM formula automatically by detecting the nearest number range.",steps:[{t:"Type SUM",d:"Click empty cell, type =SUM( drag to select numbers, type ) press Enter."},{t:"AutoSum shortcut",d:"Click cell below data, press Alt+= — Excel guesses the range and inserts =SUM()."},{t:"Non-contiguous ranges",d:"=SUM(A1:A10,C1:C10) adds two separate ranges in one formula."},{t:"AutoSum multiple columns",d:"Select empty cells below several columns, press Alt+=. All get SUM formulas at once."},{t:"Sum entire column",d:"=SUM(A:A) adds all numbers in column A — useful for dynamic tables."}],fm:[{s:"=SUM(A1:A10)",d:"Sum a range"},{s:"=SUM(A1:A10,C1:C10)",d:"Sum two ranges"},{s:"=SUM(A:A)",d:"Sum entire column"}],tip:"Select any range — the Status Bar (bottom right) shows Sum, Average, Count instantly without any formula.",imgs:["excel SUM formula AutoSum","excel Alt equals autosum shortcut","excel SUM multiple ranges"]},
+"AVERAGE MIN MAX MEDIAN":{lv:"beginner",c:"#22C55E",sub:"Key summary statistics",ex:"<strong>AVERAGE</strong> returns the mean. <strong>MIN</strong> finds the smallest. <strong>MAX</strong> finds the largest. <strong>MEDIAN</strong> returns the middle value and is unaffected by outliers. All four ignore blank cells automatically.",steps:[{t:"Average",d:"=AVERAGE(B2:B20) — arithmetic mean. Blanks ignored automatically."},{t:"Min / Max",d:"=MIN(B2:B20) smallest value. =MAX(B2:B20) largest value."},{t:"Median",d:"=MEDIAN(B2:B20) — middle value. Use when data has outliers (e.g. salaries, house prices)."},{t:"Summary row",d:"Put SUM, AVERAGE, MIN, MAX in a row below your data for an instant snapshot."},{t:"Average non-zeros",d:"=AVERAGEIF(B2:B20,\"<>0\") averages only non-zero values."}],fm:[{s:"=AVERAGE(B2:B20)",d:"Mean"},{s:"=MIN(B2:B20)",d:"Smallest"},{s:"=MAX(B2:B20)",d:"Largest"},{s:"=MEDIAN(B2:B20)",d:"Middle value"}],tip:"When AVERAGE and MEDIAN differ significantly, outliers are skewing the mean — MEDIAN is usually more representative.",imgs:["excel AVERAGE MIN MAX formula","excel summary statistics row","excel median average comparison"]},
+"COUNT COUNTA COUNTBLANK":{lv:"beginner",c:"#22C55E",sub:"Count cells with or without data",ex:"<strong>COUNT</strong> counts only numeric cells. <strong>COUNTA</strong> counts any non-empty cell. <strong>COUNTBLANK</strong> counts empty cells. Together these three cover every data-completeness check.",steps:[{t:"COUNT numbers",d:"=COUNT(A1:A100) counts cells with numbers. Blank and text are skipped."},{t:"COUNTA anything",d:"=COUNTA(A1:A100) counts all non-empty cells — numbers, text, dates, errors."},{t:"COUNTBLANK gaps",d:"=COUNTBLANK(A1:A100) counts empty cells. Use to audit data completeness."},{t:"Count data rows",d:"=COUNTA(A:A)-1 counts data rows dynamically (subtract 1 for the header)."},{t:"Completeness ratio",d:"=1-COUNTBLANK(A2:A100)/COUNTA(A:A) shows fraction of entries that are filled."}],fm:[{s:"=COUNT(A1:A100)",d:"Count numbers"},{s:"=COUNTA(A1:A100)",d:"Count non-empty cells"},{s:"=COUNTBLANK(A1:A100)",d:"Count empty cells"}],tip:"COUNTA is the best way to count rows in a dynamic table — adjusts automatically as you add or remove rows.",imgs:["excel COUNT COUNTA function","excel COUNTBLANK empty audit","excel row count formula"]},
+"ROUND ROUNDUP ROUNDDOWN":{lv:"beginner",c:"#22C55E",sub:"Control decimal precision",ex:"<strong>ROUND</strong> rounds to nearest (standard). <strong>ROUNDUP</strong> always rounds away from zero. <strong>ROUNDDOWN</strong> always rounds toward zero. Second argument = decimal places (0=whole, -1=tens, -2=hundreds).",steps:[{t:"Round to 2 decimals",d:"=ROUND(3.14159,2) → 3.14"},{t:"Round to whole number",d:"=ROUND(3.7,0) → 4. =ROUND(3.2,0) → 3."},{t:"Round to tens",d:"=ROUND(1247,-1) → 1250. =ROUND(1247,-2) → 1200."},{t:"ROUNDUP for ceiling",d:"=ROUNDUP(2.1,0) → 3. Always up — good for billing, boxes needed."},{t:"ROUNDDOWN for floor",d:"=ROUNDDOWN(2.9,0) → 2. Always down — good for completed full units."}],fm:[{s:"=ROUND(A1,2)",d:"2 decimal places"},{s:"=ROUNDUP(A1,0)",d:"Round up to whole"},{s:"=ROUNDDOWN(A1,0)",d:"Round down to whole"},{s:"=MROUND(A1,0.25)",d:"Round to nearest 0.25"}],tip:"In financial models always ROUND your results — never rely on cell formatting alone to hide decimals, as they still affect SUM totals.",imgs:["excel ROUND formula decimal","excel ROUNDUP ROUNDDOWN","excel MROUND nearest value"]},
+"Number & Date Formats":{lv:"beginner",c:"#22C55E",sub:"Display values the way you need",ex:"Excel stores all numbers as raw values but lets you control how they're <strong>displayed</strong> with formats. 0.25 can show as 25%, $0.25, or just 0. A date can show as 28/05/2026 or May 26 — without changing the underlying data.",steps:[{t:"Open Format Cells",d:"Ctrl+1. Number tab has all formatting categories."},{t:"Currency format",d:"Click $ on Home tab, or Ctrl+1 → Currency. Set decimal places and currency symbol."},{t:"Percentage format",d:"Click % on Home tab. 0.25 → 25% (Excel multiplies by 100 automatically)."},{t:"Custom date format",d:"Ctrl+1 → Custom: dd/mm/yyyy, mmm-yy, or dddd for the full weekday name."},{t:"Custom number format",d:"Ctrl+1 → Custom: #,##0.00 for thousands with 2 decimals. 0.0% for 1-decimal percentage."}],fm:[],tip:"Ctrl+Shift+$ = currency. Ctrl+Shift+% = percentage. Ctrl+Shift+# = date. Ctrl+Shift+! = comma number.",imgs:["excel format cells number dialog","excel currency percentage date format","excel custom format codes"]},
+"Cell Formatting & Styles":{lv:"beginner",c:"#22C55E",sub:"Make your data clear and professional",ex:"Cell <strong>formatting</strong> — fill colors, font styles, borders, alignment — makes data easier to read and understand. <strong>Format Painter</strong> copies formatting between cells in one click. <strong>Cell Styles</strong> apply consistent, theme-aware formats.",steps:[{t:"Fill color",d:"Select cells → Home → fill color dropdown. Pick from the palette."},{t:"Borders",d:"Select cells → Home → border dropdown. Choose All Borders, Thick Box, Bottom Only, etc."},{t:"Bold / italic / underline",d:"Ctrl+B bold, Ctrl+I italic, Ctrl+U underline — the three most-used text styles."},{t:"Format Painter",d:"Format one cell perfectly. Click Format Painter (paintbrush). Click other cells to copy the formatting."},{t:"Clear formatting",d:"Home → Clear → Clear Formats. Removes all formatting without deleting data."}],fm:[],tip:"Ctrl+T (Format as Table) gives instant professional formatting with alternating row colors, auto-filter, and auto-expanding formulas.",imgs:["excel fill color border format","excel format painter copy style","excel cell styles table format"]},
+"Conditional Formatting":{lv:"beginner",c:"#22C55E",sub:"Automatically highlight data visually",ex:"<strong>Conditional Formatting</strong> automatically colors, bars, or icons cells based on their values — no formulas needed. Instantly highlights outliers, KPI status, or trends in any dataset.",steps:[{t:"Highlight cells > value",d:"Select data → Home → Conditional Formatting → Highlight Cell Rules → Greater Than."},{t:"Color scale",d:"Home → CF → Color Scales. Cells shade from red (low) to green (high) proportionally."},{t:"Data bars",d:"Home → CF → Data Bars. Each cell gets a proportional bar — like a mini bar chart."},{t:"Icon sets",d:"Home → CF → Icon Sets. Add traffic lights, arrows, or stars."},{t:"Formula-based rule",d:"Home → CF → New Rule → 'Use a formula'. E.g. =$C2>100 highlights the whole row."}],fm:[],tip:"Stack multiple rules and use 'Stop If True' so higher-priority rules prevent lower ones from firing.",imgs:["excel conditional formatting color scale","excel data bars icon sets","excel formula based conditional format"]},
+"TODAY NOW DATE Functions":{lv:"beginner",c:"#22C55E",sub:"Work with live and calculated dates",ex:"<strong>TODAY()</strong> returns today's date, updating daily. <strong>NOW()</strong> returns date+time. <strong>DATE(y,m,d)</strong> builds a date from parts. <strong>DAY/MONTH/YEAR</strong> extract components from a date.",steps:[{t:"Live date",d:"=TODAY() — updates every day the file is opened."},{t:"Live date+time",d:"=NOW() — recalculates whenever the sheet recalculates."},{t:"Build a date from parts",d:"=DATE(2024,3,15) → 15 March 2024. Useful when year/month/day are in separate columns."},{t:"Extract components",d:"=YEAR(A1), =MONTH(A1), =DAY(A1) pull each part from an existing date."},{t:"First/last of month",d:"=DATE(YEAR(A1),MONTH(A1),1) → first day. =DATE(YEAR(A1),MONTH(A1)+1,0) → last day."}],fm:[{s:"=TODAY()",d:"Today's date"},{s:"=DATE(YEAR(A1),MONTH(A1),1)",d:"First day of A1's month"},{s:"=TEXT(A1,\"dddd\")",d:"Day name (e.g. Monday)"}],tip:"Ctrl+; inserts a static (non-updating) date. TODAY() updates daily — choose based on your need.",imgs:["excel TODAY NOW date function","excel DATE YEAR MONTH DAY","excel date formula first last month"]},
+"DATEDIF & Date Math":{lv:"beginner",c:"#22C55E",sub:"Calculate differences between dates",ex:"<strong>DATEDIF</strong> calculates exact differences between dates in years, months, or days. Though undocumented, it works perfectly in all Excel versions. Simple subtraction (=B1-A1) also gives day counts.",steps:[{t:"Age in years",d:"=DATEDIF(B2,TODAY(),\"Y\") where B2 is a birthdate. Returns completed years."},{t:"Months between dates",d:"=DATEDIF(A1,B1,\"M\") gives complete months between two dates."},{t:"Days between dates",d:"=B1-A1 (format result as Number) or =DATEDIF(A1,B1,\"D\")."},{t:"Remaining months after years",d:"=DATEDIF(A1,B1,\"YM\") — months left over after counting complete years."},{t:"Full age string",d:"=DATEDIF(A1,TODAY(),\"Y\")&\" yrs \"&DATEDIF(A1,TODAY(),\"YM\")&\" mths\""}],fm:[{s:"=DATEDIF(A1,B1,\"Y\")",d:"Complete years between dates"},{s:"=DATEDIF(A1,B1,\"YM\")",d:"Remaining months after full years"},{s:"=NETWORKDAYS(A1,B1)",d:"Working days between dates"}],tip:"DATEDIF start date must be earlier than end date — it returns an error if reversed.",imgs:["excel DATEDIF age calculation","excel date difference formula","excel NETWORKDAYS working days"]},
+"WEEKDAY WORKDAY EDATE":{lv:"beginner",c:"#22C55E",sub:"Advanced date calculations",ex:"<strong>WEEKDAY</strong> returns the day of the week as a number. <strong>WORKDAY</strong> adds working days to a date. <strong>EDATE</strong> adds whole months. <strong>EOMONTH</strong> returns the last day of a month.",steps:[{t:"Day of week",d:"=WEEKDAY(A1,2) returns 1=Mon through 7=Sun."},{t:"Day name as text",d:"=TEXT(A1,\"dddd\") returns 'Monday', 'Tuesday', etc."},{t:"Add working days",d:"=WORKDAY(A1,10) returns the date 10 working days after A1, skipping weekends."},{t:"Add months",d:"=EDATE(A1,3) adds exactly 3 months. =EDATE(A1,-1) subtracts 1 month."},{t:"End of month",d:"=EOMONTH(A1,0) → last day of A1's month. =EOMONTH(A1,1) → last day of next month."}],fm:[{s:"=WEEKDAY(A1,2)",d:"1=Mon … 7=Sun"},{s:"=WORKDAY(A1,10)",d:"10 working days from A1"},{s:"=EDATE(A1,3)",d:"3 months after A1"},{s:"=EOMONTH(A1,0)",d:"Last day of A1's month"}],tip:"WORKDAY.INTL lets you define custom weekends — useful for regions with non-standard work weeks (e.g. Fri+Sat).",imgs:["excel WEEKDAY day name function","excel WORKDAY EDATE months","excel EOMONTH last day month"]},
+"Basic Charts":{lv:"beginner",c:"#22C55E",sub:"Visualise data in one click",ex:"Charts transform numbers into instant visual stories. Excel's <strong>Recommended Charts</strong> analyses your data and suggests the best type. Column, Line, Pie and Bar are the four most common — each suited to different data stories.",steps:[{t:"Select data",d:"Highlight your range including headers. Labels in one column, values in others."},{t:"Insert Recommended Chart",d:"Insert → Charts → Recommended Charts. Excel previews options suited to your data."},{t:"Choose type",d:"Column (compare categories), Line (trends), Pie (proportions), Bar (ranking)."},{t:"Add chart elements",d:"Click + next to chart to add/remove Title, Data Labels, Legend, Gridlines."},{t:"Move and resize",d:"Drag to reposition. Drag corner handles to resize. Right-click → Move Chart for its own sheet."}],fm:[],tip:"Click the paintbrush icon next to a selected chart to quickly browse colour palettes and style presets.",imgs:["excel insert chart recommended","excel bar column line chart","excel chart format design"]},
+"Chart Types & Best Practices":{lv:"beginner",c:"#22C55E",sub:"Choose the right chart for your data",ex:"Different data tells different stories. <strong>Column/Bar</strong> for comparisons. <strong>Line</strong> for trends. <strong>Pie</strong> for proportions (max 5 slices). <strong>Scatter</strong> for correlations. <strong>Sparklines</strong> for tiny in-cell trend indicators.",steps:[{t:"Column vs Bar",d:"Column (vertical) for time-based comparisons. Bar (horizontal) for rankings or long labels."},{t:"Line chart for trends",d:"Select date + value columns → Insert → Line. Best for monthly sales, temperatures, stock."},{t:"Pie chart",d:"Use only with 5 or fewer segments. More than 5 → use a bar chart instead."},{t:"Combo chart",d:"Insert → Combo Chart. Mix column + line on secondary axis (e.g. revenue bars + margin % line)."},{t:"Sparklines",d:"Insert → Sparklines → Line. Places a tiny chart inside a single cell for dashboard KPI rows."}],fm:[],tip:"Sort bar chart data largest-to-smallest before charting — ranked bar charts are much easier to read.",imgs:["excel chart types column line pie","excel combo chart secondary axis","excel sparklines cell chart"]},
+"Print & Page Setup":{lv:"beginner",c:"#22C55E",sub:"Print spreadsheets professionally",ex:"Excel's print settings control how data appears on paper. <strong>Print Area</strong> defines what prints. <strong>Scale to Fit</strong> shrinks to a page count. <strong>Print Titles</strong> repeats headers on every page. <strong>Headers/Footers</strong> add page numbers.",steps:[{t:"Preview",d:"Ctrl+P or File → Print. The preview shows exactly what will print."},{t:"Set print area",d:"Select range → Page Layout → Print Area → Set Print Area. Only this range prints."},{t:"Fit to page",d:"Page Layout → Scale to Fit → Width: 1 page to force onto a single page width."},{t:"Repeat headers",d:"Page Layout → Print Titles → Rows to repeat at top. Select header row."},{t:"Add page numbers",d:"Insert → Header & Footer. Use preset codes: &[Page] for page number, &[Date] for date."}],fm:[],tip:"Page Layout view (View → Page Layout) shows how the sheet splits across pages while you're still editing.",imgs:["excel print preview page setup","excel print area page breaks","excel headers footers page numbers"]},
+"VLOOKUP":{lv:"intermediate",c:"#EAB308",sub:"Search a table and return a matching value",ex:"<strong>VLOOKUP</strong> searches the first column of a table for a value and returns a value from a specified column in the same row. The four arguments: what to find, where to look, which column to return, exact match (always FALSE).",steps:[{t:"Understand the 4 arguments",d:"=VLOOKUP(lookup, table, col_number, FALSE). FALSE = exact match — always include it."},{t:"Write your first VLOOKUP",d:"=VLOOKUP(A2,$F$2:$H$100,2,FALSE) — find A2 in column F, return the 2nd column of the table."},{t:"Lock the table range",d:"Always use $F$2:$H$100 (absolute refs) so the table doesn't shift when copying down."},{t:"Handle #N/A errors",d:"=IFERROR(VLOOKUP(A2,$F$2:$H$100,2,FALSE),\"Not found\") shows friendly text instead of errors."},{t:"Understand the limit",d:"VLOOKUP only looks RIGHT — for left-lookups use XLOOKUP or INDEX+MATCH."}],fm:[{s:"=VLOOKUP(A2,$F$2:$H$100,2,FALSE)",d:"Exact match, return column 2"},{s:"=IFERROR(VLOOKUP(A2,$F:$H,2,FALSE),\"–\")",d:"Suppress #N/A"}],tip:"Forgetting FALSE is the #1 VLOOKUP mistake — without it, Excel does approximate matching and returns wrong results.",imgs:["excel VLOOKUP formula example","excel VLOOKUP table column index","excel VLOOKUP IFERROR"]},
+"HLOOKUP":{lv:"intermediate",c:"#EAB308",sub:"Horizontal lookup across row headers",ex:"<strong>HLOOKUP</strong> searches the first row of a table and returns a value from a specified row below. It's the horizontal version of VLOOKUP — less common today since XLOOKUP handles both directions.",steps:[{t:"Structure",d:"=HLOOKUP(lookup, table, row_num, FALSE). Searches top row, returns value from row_num below."},{t:"Write an HLOOKUP",d:"=HLOOKUP(\"Feb\",$B$1:$M$5,3,FALSE) — finds 'Feb' in row 1, returns row 3 value."},{t:"Exact match",d:"Always use FALSE as 4th argument for exact matching."},{t:"Handle errors",d:"Wrap in IFERROR just like VLOOKUP."},{t:"Prefer XLOOKUP",d:"On Excel 365/2021, replace HLOOKUP with XLOOKUP — more flexible and handles both directions."}],fm:[{s:"=HLOOKUP(A1,$B$1:$M$5,3,FALSE)",d:"Find A1 in row 1, return row 3"},{s:"=IFERROR(HLOOKUP(A1,$B$1:$M$5,3,FALSE),0)",d:"Return 0 if not found"}],tip:"HLOOKUP requires lookup values in the TOP row — if headers are in a column, use VLOOKUP or XLOOKUP.",imgs:["excel HLOOKUP horizontal lookup","excel HLOOKUP row table","excel HLOOKUP vs VLOOKUP"]},
+"XLOOKUP":{lv:"intermediate",c:"#EAB308",sub:"The modern all-direction lookup",ex:"<strong>XLOOKUP</strong> (Excel 365/2021) replaces both VLOOKUP and HLOOKUP. It looks left or right, has a built-in not-found handler, returns multiple columns at once, and doesn't need column index numbers.",steps:[{t:"Basic XLOOKUP",d:"=XLOOKUP(A2,F:F,G:G) — find A2 in column F, return the corresponding value from G."},{t:"Built-in not-found",d:"=XLOOKUP(A2,F:F,G:G,\"Not found\") — 4th argument shows when no match. No IFERROR needed."},{t:"Look to the left",d:"=XLOOKUP(A2,C:C,A:A) — return column is LEFT of the lookup column. VLOOKUP can't do this."},{t:"Return multiple columns",d:"=XLOOKUP(A2,F:F,G:I) — returns 3 columns that spill automatically."},{t:"Match modes",d:"5th arg: 0=exact, -1=exact or next smaller, 1=exact or next larger, 2=wildcard."}],fm:[{s:"=XLOOKUP(A2,F:F,G:G,\"–\")",d:"Basic XLOOKUP with fallback"},{s:"=XLOOKUP(A2,F:F,G:I,\"–\",0)",d:"Return 3 columns on exact match"}],tip:"On Excel 365, learn XLOOKUP and skip VLOOKUP entirely — it's strictly better in every way.",imgs:["excel XLOOKUP modern lookup","excel XLOOKUP left column return","excel XLOOKUP multiple columns spill"]},
+"INDEX & MATCH":{lv:"intermediate",c:"#EAB308",sub:"The most flexible lookup combination",ex:"<strong>INDEX</strong> returns the value at a given position. <strong>MATCH</strong> finds the position of a value. Combined, they perform lookups in any direction with any column as the lookup column — more powerful than VLOOKUP.",steps:[{t:"MATCH alone",d:"=MATCH(\"Apple\",A1:A10,0) returns the row number of 'Apple'. 0 = exact match."},{t:"INDEX alone",d:"=INDEX(B1:B10,3) returns the 3rd value in B1:B10."},{t:"Combine",d:"=INDEX(B1:B10,MATCH(\"Apple\",A1:A10,0)) — MATCH finds the row, INDEX returns from column B."},{t:"Two-way lookup",d:"=INDEX(B2:D10,MATCH(G1,A2:A10,0),MATCH(H1,B1:D1,0)) — look up row and column headers."},{t:"Lock references",d:"=INDEX($B$1:$B$100,MATCH(A2,$A$1:$A$100,0)) — use absolute refs so formulas copy correctly."}],fm:[{s:"=INDEX(B:B,MATCH(A2,A:A,0))",d:"Classic INDEX+MATCH lookup"},{s:"=INDEX(B2:D10,MATCH(G1,A2:A10,0),MATCH(H1,B1:D1,0))",d:"Two-way lookup"}],tip:"INDEX+MATCH doesn't require the lookup column to be first — this flexibility makes it essential for complex workbooks.",imgs:["excel INDEX MATCH formula","excel INDEX MATCH two-way","excel INDEX MATCH vs VLOOKUP"]},
+"IF IFS Nested IF":{lv:"intermediate",c:"#EAB308",sub:"Decision-making in formulas",ex:"The <strong>IF</strong> function returns one value if TRUE, another if FALSE. <strong>Nested IFs</strong> chain multiple conditions. <strong>IFS</strong> is cleaner for 3+ conditions — no nesting required.",steps:[{t:"Basic IF",d:"=IF(A1>100,\"Over budget\",\"OK\")"},{t:"Nested IF",d:"=IF(A1>90,\"A\",IF(A1>75,\"B\",IF(A1>60,\"C\",\"Fail\")))"},{t:"Use IFS",d:"=IFS(A1>90,\"A\",A1>75,\"B\",A1>60,\"C\",TRUE,\"Fail\") — cleaner than nested IFs."},{t:"IF with AND",d:"=IF(AND(A1>50,B1>50),\"Both pass\",\"Fail\")"},{t:"IF with OR",d:"=IF(OR(A1>100,B1>100),\"Bonus\",\"Standard\")"}],fm:[{s:"=IF(A1>0,\"Positive\",\"Not positive\")",d:"Basic condition"},{s:"=IFS(A1>90,\"A\",A1>75,\"B\",TRUE,\"C\")",d:"Multiple conditions without nesting"},{s:"=IF(AND(A1>0,B1>0),\"Both positive\",\"No\")",d:"AND condition"}],tip:"Use SWITCH() when testing one cell against a list of exact values — cleaner than a long IFS chain.",imgs:["excel IF function formula","excel nested IF IFS formula","excel IF AND OR logic"]},
+"AND OR NOT SWITCH":{lv:"intermediate",c:"#EAB308",sub:"Combine and invert logical tests",ex:"<strong>AND</strong> returns TRUE only if all conditions are true. <strong>OR</strong> returns TRUE if any condition is true. <strong>NOT</strong> inverts a logical value. <strong>SWITCH</strong> maps a single value to multiple outcomes cleanly.",steps:[{t:"AND",d:"=AND(A1>0,B1>0,C1>0) — TRUE only when all three are positive."},{t:"OR",d:"=OR(A1=\"East\",A1=\"West\") — TRUE if A1 is either value."},{t:"NOT",d:"=NOT(A1=\"Closed\") — TRUE when A1 is anything except 'Closed'."},{t:"SWITCH",d:"=SWITCH(A1,1,\"Jan\",2,\"Feb\",3,\"Mar\",\"Other\") — maps numbers to names cleanly."},{t:"Combine",d:"=IF(AND(A1>0,NOT(B1=\"Closed\")),\"Active\",\"Skip\")"}],fm:[{s:"=AND(A1>0,B1>0)",d:"Both positive"},{s:"=OR(A1=\"NY\",A1=\"LA\")",d:"Either city"},{s:"=SWITCH(A1,1,\"Low\",2,\"Med\",3,\"High\",\"?\")",d:"Map values to labels"}],tip:"AND/OR inside SUMPRODUCT formulas can test entire column conditions simultaneously — very powerful for counting.",imgs:["excel AND OR NOT logic","excel SWITCH function values","excel IF AND OR combined"]},
+"IFERROR IFNA":{lv:"intermediate",c:"#EAB308",sub:"Handle formula errors gracefully",ex:"<strong>IFERROR</strong> catches any error (#N/A, #VALUE!, #REF!, etc.) and returns a value you specify. <strong>IFNA</strong> only catches #N/A — more precise for lookup functions.",steps:[{t:"IFERROR basics",d:"=IFERROR(your_formula,\"fallback\") — shows the fallback if any error occurs."},{t:"Return blank on error",d:"=IFERROR(VLOOKUP(A2,F:H,2,FALSE),\"\") — empty string looks cleaner than #N/A."},{t:"Return 0 on error",d:"=IFERROR(A1/B1,0) — avoids #DIV/0! when B1 is zero."},{t:"IFNA for lookups",d:"=IFNA(XLOOKUP(A2,F:F,G:G),\"Not found\") — only catches #N/A, lets other errors show."},{t:"Try two sources",d:"=IFERROR(VLOOKUP(A2,Table1,2,0),IFERROR(VLOOKUP(A2,Table2,2,0),\"Missing\"))"}],fm:[{s:"=IFERROR(formula,\"\")",d:"Return blank on any error"},{s:"=IFERROR(A1/B1,0)",d:"Return 0 on division error"},{s:"=IFNA(XLOOKUP(A2,F:F,G:G),\"–\")",d:"Only handle #N/A"}],tip:"Prefer IFNA over IFERROR for lookups — IFERROR can hide genuine formula mistakes like wrong column references.",imgs:["excel IFERROR error handling","excel IFNA VLOOKUP not found","excel error handling formula"]},
+"COUNTIF & COUNTIFS":{lv:"intermediate",c:"#EAB308",sub:"Count cells meeting conditions",ex:"<strong>COUNTIF</strong> counts cells matching a single condition. <strong>COUNTIFS</strong> counts cells matching multiple conditions simultaneously. Essential for any categorised counting.",steps:[{t:"COUNTIF basic",d:"=COUNTIF(A:A,\"Apple\") — counts exact text matches."},{t:"COUNTIF comparison",d:"=COUNTIF(B:B,\">500\") — counts values over 500."},{t:"COUNTIF wildcard",d:"=COUNTIF(A:A,\"App*\") — counts cells starting with 'App'."},{t:"COUNTIFS two criteria",d:"=COUNTIFS(A:A,\"East\",B:B,\">500\") — both conditions must match."},{t:"Date range",d:"=COUNTIFS(C:C,\">=\"&D1,C:C,\"<=\"&E1) — count dates between D1 and E1."}],fm:[{s:"=COUNTIF(A:A,\"Apple\")",d:"Count exact matches"},{s:"=COUNTIF(B:B,\">500\")",d:"Count values > 500"},{s:"=COUNTIFS(A:A,\"East\",B:B,\">500\")",d:"Two-condition count"}],tip:"COUNTIF is not case-sensitive. For case-sensitive counting: =SUMPRODUCT((EXACT(A1:A100,\"apple\"))*1).",imgs:["excel COUNTIF criteria formula","excel COUNTIFS multiple conditions","excel COUNTIF wildcard date range"]},
+"SUMIF & SUMIFS":{lv:"intermediate",c:"#EAB308",sub:"Sum values meeting conditions",ex:"<strong>SUMIF</strong> sums values where one condition is met. <strong>SUMIFS</strong> sums where multiple conditions are all met. The workhorses of financial reporting.",steps:[{t:"SUMIF basic",d:"=SUMIF(A:A,\"East\",B:B) — for rows where A='East', sum values in B."},{t:"SUMIF comparison",d:"=SUMIF(B:B,\">1000\",C:C) — sum C where B exceeds 1000."},{t:"SUMIF with cell ref",d:"=SUMIF(A:A,E1,B:B) — condition from E1, more flexible than hardcoding."},{t:"SUMIFS two criteria",d:"=SUMIFS(C:C,A:A,\"East\",B:B,\">500\") — sum range is FIRST in SUMIFS."},{t:"Date range",d:"=SUMIFS(C:C,D:D,\">=\"&F1,D:D,\"<=\"&G1) — sum C for dates between F1 and G1."}],fm:[{s:"=SUMIF(A:A,\"East\",B:B)",d:"Sum B where A='East'"},{s:"=SUMIFS(C:C,A:A,\"East\",B:B,\">500\")",d:"Sum C matching two criteria"}],tip:"SUMIFS sum range is the FIRST argument (unlike SUMIF where it's last) — this trips everyone up at least once.",imgs:["excel SUMIF criteria sum","excel SUMIFS multiple conditions","excel SUMIF financial report"]},
+"AVERAGEIF & AVERAGEIFS":{lv:"intermediate",c:"#EAB308",sub:"Average values meeting conditions",ex:"<strong>AVERAGEIF</strong> averages values where one condition is met. <strong>AVERAGEIFS</strong> averages where multiple conditions are all met. Syntax mirrors SUMIF/SUMIFS exactly.",steps:[{t:"AVERAGEIF basic",d:"=AVERAGEIF(A:A,\"East\",B:B) — average of B values where A='East'."},{t:"Exclude zeros",d:"=AVERAGEIF(B:B,\"<>0\",B:B) — average only non-zero values."},{t:"AVERAGEIFS two criteria",d:"=AVERAGEIFS(C:C,A:A,\"East\",B:B,\"Q1\") — average C where region=East AND quarter=Q1."},{t:"Exclude blanks",d:"=AVERAGEIF(B:B,\"<>\",B:B) — average non-blank cells only."},{t:"Date range",d:"=AVERAGEIFS(C:C,D:D,\">=\"&F1,D:D,\"<=\"&G1)"}],fm:[{s:"=AVERAGEIF(A:A,\"East\",B:B)",d:"Average B where A='East'"},{s:"=AVERAGEIFS(C:C,A:A,\"East\",B:B,\"Q1\")",d:"Two-condition average"}],tip:"AVERAGEIF ignores blanks automatically but includes zeros — filter them with \">0\" if needed.",imgs:["excel AVERAGEIF formula criteria","excel AVERAGEIFS multiple conditions","excel conditional average analysis"]},
+"Text Functions":{lv:"intermediate",c:"#EAB308",sub:"Extract, clean and combine text",ex:"Excel has a full suite of <strong>text functions</strong>. <strong>LEFT/RIGHT/MID</strong> extract parts. <strong>FIND/SEARCH</strong> locate characters. <strong>TRIM</strong> removes spaces. <strong>SUBSTITUTE</strong> replaces text. <strong>TEXTJOIN</strong> combines with a delimiter.",steps:[{t:"Extract parts",d:"=LEFT(A1,3) first 3 chars. =RIGHT(A1,4) last 4 chars. =MID(A1,5,3) 3 chars from position 5."},{t:"Find position",d:"=FIND(\" \",A1) position of first space (case-sensitive). SEARCH is case-insensitive."},{t:"Extract first name",d:"=LEFT(A1,FIND(\" \",A1)-1) — everything before the first space."},{t:"Join with TEXTJOIN",d:"=TEXTJOIN(\", \",TRUE,A1:A10) joins cells with comma-space, skipping blanks."},{t:"Clean with TRIM",d:"=TRIM(SUBSTITUTE(A1,CHAR(160),\" \")) removes regular and non-breaking spaces."}],fm:[{s:"=LEFT(A1,FIND(\" \",A1)-1)",d:"Extract first name"},{s:"=TEXTJOIN(\", \",TRUE,A1:A10)",d:"Join range skipping blanks"},{s:"=PROPER(TRIM(A1))",d:"Capitalise and clean"}],tip:"Chain TRIM(PROPER(SUBSTITUTE())) to clean messy imported name data in one formula.",imgs:["excel LEFT RIGHT MID text","excel TEXTJOIN combine cells","excel TRIM SUBSTITUTE clean data"]},
+"TEXT & VALUE Functions":{lv:"intermediate",c:"#EAB308",sub:"Convert between text and numbers",ex:"<strong>TEXT</strong> converts a number or date into formatted text — essential when building strings with dates or currency. <strong>VALUE</strong> converts text-numbers back into real numbers for calculations.",steps:[{t:"Number to formatted text",d:"=TEXT(A1,\"$#,##0.00\") converts 1234.5 into \"$1,234.50\" as a text string."},{t:"Date to formatted text",d:"=TEXT(A1,\"dd mmm yyyy\") turns a date into \"28 May 2026\" as text."},{t:"Embed in a sentence",d:"=\"Report for \"&TEXT(TODAY(),\"dd/mm/yyyy\") — builds a readable string."},{t:"Convert text-numbers",d:"=VALUE(A1) converts \"1,234\" stored as text into the number 1234."},{t:"Quick coerce",d:"=--A1 or =A1*1 quickly converts text-numbers without VALUE()."}],fm:[{s:"=TEXT(A1,\"dd mmm yyyy\")",d:"Date as readable text"},{s:"=TEXT(A1,\"$#,##0\")",d:"Number as currency text"},{s:"=VALUE(A1)",d:"Convert text to number"}],tip:"TEXT() returns a text string — don't use it in arithmetic. Use it only for display or concatenation.",imgs:["excel TEXT function format number","excel TEXT date string","excel VALUE convert text number"]},
+"Pivot Tables":{lv:"intermediate",c:"#EAB308",sub:"Summarise large datasets instantly",ex:"A <strong>Pivot Table</strong> summarises thousands of rows into a compact interactive report — no formulas needed. Drag fields to Rows, Columns, Values, and Filters areas. Rearrange and filter in seconds.",steps:[{t:"Prepare data",d:"One header row, no blank rows/columns, consistent data types. An Excel Table (Ctrl+T) is ideal source."},{t:"Insert Pivot Table",d:"Click inside data → Insert → PivotTable → choose location."},{t:"Build the report",d:"Drag: category to Rows, category to Columns, numeric field to Values, filter field to Filters."},{t:"Change calculation",d:"Click Values field → Value Field Settings → change Sum to Count, Average, %, etc."},{t:"Refresh",d:"Right-click → Refresh after source data changes. Or Data → Refresh All."}],fm:[],tip:"Double-click any Pivot Table value cell — Excel creates a new sheet showing all the source rows behind that number.",imgs:["excel pivot table create fields","excel pivot table rows columns","excel pivot table value field settings"]},
+"Pivot Table Grouping & Calculated Fields":{lv:"intermediate",c:"#EAB308",sub:"Advanced Pivot Table features",ex:"<strong>Grouping</strong> automatically combines dates into months/quarters/years, or numbers into bands. <strong>Calculated Fields</strong> add formula-based metrics directly inside the Pivot Table.",steps:[{t:"Group dates",d:"Right-click a date field → Group → check Months, Quarters, Years."},{t:"Group numbers",d:"Right-click a number field → Group → set Start, End, and By interval."},{t:"Ungroup",d:"Right-click grouped field → Ungroup."},{t:"Calculated Field",d:"PivotTable Analyze → Fields, Items & Sets → Calculated Field → name and enter formula."},{t:"Show as percentage",d:"Right-click value → Show Values As → % of Grand Total, Running Total, etc."}],fm:[],tip:"Calculated Fields compute on aggregated values, not individual rows — for row-level calculations use a helper column in source data.",imgs:["excel pivot table group dates","excel calculated field pivot","excel show values as percentage"]},
+"Slicers & Timelines":{lv:"intermediate",c:"#EAB308",sub:"Visual interactive filters for Pivot Tables",ex:"<strong>Slicers</strong> are visual clickable filter buttons for Pivot Tables. <strong>Timelines</strong> are date-specific slicers with a sliding interface. Both update all connected Pivot Tables simultaneously.",steps:[{t:"Insert slicer",d:"Click Pivot Table → PivotTable Analyze → Insert Slicer → check fields → OK."},{t:"Use slicer",d:"Click button to filter. Ctrl+click for multi-select. Funnel-with-X clears the filter."},{t:"Insert timeline",d:"PivotTable Analyze → Insert Timeline → select date field."},{t:"Connect to multiple Pivots",d:"Right-click slicer → Report Connections → check all Pivot Tables to control."},{t:"Style slicers",d:"Slicer tab → choose a color style to match your dashboard."}],fm:[],tip:"Resize slicers to show all buttons without scrolling — users should never need to scroll a slicer.",imgs:["excel slicer pivot table","excel timeline date filter","excel slicer connect multiple pivots"]},
+"Sort & Filter":{lv:"intermediate",c:"#EAB308",sub:"Organise and navigate data quickly",ex:"<strong>Sort</strong> reorders rows by columns. <strong>AutoFilter</strong> (Ctrl+Shift+L) shows only matching rows. Both are non-destructive — data is never deleted, only reordered or hidden.",steps:[{t:"Quick sort",d:"Click a cell in the column → Data → Sort A to Z or Z to A."},{t:"Multi-level sort",d:"Data → Sort → Add Level. Sort by Department first, then by Date within each."},{t:"Enable AutoFilter",d:"Ctrl+Shift+L inside data. Dropdown arrows appear on headers."},{t:"Filter by value",d:"Click dropdown → uncheck 'Select All' → check values you want."},{t:"Filter by condition",d:"Dropdown → Number/Text Filters → Greater Than, Begins With, Top 10, etc."}],fm:[],tip:"After filtering, select visible cells only (Alt+;) before copying — this skips hidden rows.",imgs:["excel sort ascending descending","excel autofilter dropdown","excel filter number text conditions"]},
+"Advanced Filter":{lv:"intermediate",c:"#EAB308",sub:"Complex multi-row filter criteria",ex:"<strong>Advanced Filter</strong> enables OR conditions across multiple rows, extracting results to another location, and filtering by formulas — things AutoFilter can't do.",steps:[{t:"Set up criteria range",d:"Copy headers to a blank area. Criteria in same row = AND. Different rows = OR."},{t:"Open Advanced Filter",d:"Data → Sort & Filter → Advanced."},{t:"Configure",d:"List Range = data table. Criteria Range = criteria area. Filter in-place or copy to another location."},{t:"Copy to another location",d:"Select 'Copy to another location' — filtered results appear without disturbing the original."},{t:"Unique records only",d:"Check 'Unique records only' to automatically remove duplicate rows."}],fm:[],tip:"Advanced Filter criteria support wildcards (*) and formulas for above-average or calculated condition filtering.",imgs:["excel advanced filter criteria","excel advanced filter copy location","excel advanced filter OR conditions"]},
+"Data Validation":{lv:"intermediate",c:"#EAB308",sub:"Control what can be entered in cells",ex:"<strong>Data Validation</strong> restricts entries to dropdowns, number ranges, or date ranges — keeping data clean. It shows helpful input messages and clear error alerts to guide users.",steps:[{t:"Create a dropdown",d:"Data → Data Validation → Allow: List → Source: type Yes,No,Maybe or select a range."},{t:"Dropdown from table",d:"Source: =TableName[Column] for a structured table reference that auto-updates."},{t:"Number range",d:"Allow: Whole Number → between 1 and 100. Error alert fires for out-of-range entries."},{t:"Input message",d:"Data Validation → Input Message tab. Shows a tooltip when the cell is selected."},{t:"Error alert types",d:"Error Alert → Stop (blocks entry), Warning (warns), Information (note only)."}],fm:[],tip:"Source a dropdown from a named range — expanding the named range automatically updates all dropdowns pointing to it.",imgs:["excel data validation dropdown","excel data validation settings","excel dropdown from named range"]},
+"Remove Duplicates & Text to Columns":{lv:"intermediate",c:"#EAB308",sub:"Clean and restructure data",ex:"<strong>Remove Duplicates</strong> deletes duplicate rows. <strong>Text to Columns</strong> splits one column into multiple based on a delimiter (comma, space, tab) or fixed width — essential for cleaning imported data.",steps:[{t:"Remove Duplicates",d:"Select data → Data → Remove Duplicates → choose columns to check → OK."},{t:"Preview first",d:"Excel tells you how many duplicates were found. Work on a copy of data first."},{t:"Text to Columns delimiter",d:"Select column → Data → Text to Columns → Delimited → choose delimiter."},{t:"Text to Columns fixed",d:"Choose Fixed Width → drag break lines for column positions → Finish."},{t:"Convert text dates",d:"Text to Columns with Date format converts text-dates into real Excel dates."}],fm:[],tip:"Text to Columns also converts text-numbers to real numbers — just run it with Finish (no changes) to force recalculation.",imgs:["excel remove duplicates data tab","excel text to columns delimiter","excel split column comma text"]},
+"Tables (ListObjects)":{lv:"intermediate",c:"#EAB308",sub:"Structured smart data ranges",ex:"Excel <strong>Tables</strong> (Ctrl+T) auto-expand when data is added, have filtered headers, support structured references, auto-fill formulas, and make Pivot Tables refresh automatically.",steps:[{t:"Create table",d:"Click inside data → Ctrl+T → confirm range and headers → OK."},{t:"Name your table",d:"Table Design → Table Name. Change 'Table1' to 'SalesData'."},{t:"Total row",d:"Table Design → check Total Row. Dropdowns let you choose Sum, Average, Count, etc."},{t:"Structured references",d:"=[@Price]*[@Qty] inside a table — self-documenting formula using column names."},{t:"Reference from outside",d:"=SUM(SalesData[Revenue]) — always sums Revenue column even as rows are added."}],fm:[{s:"=SUM(SalesData[Revenue])",d:"Sum Revenue column of SalesData"},{s:"=[@Price]*[@Qty]",d:"Multiply current row columns"}],tip:"Tables auto-expand when you type in the row below — new data is automatically included in formulas and Pivot Tables.",imgs:["excel table Ctrl+T create","excel structured reference table","excel table total row expand"]},
+"FILTER Function":{lv:"advanced",c:"#F97316",sub:"Dynamic row extraction by criteria",ex:"The <strong>FILTER</strong> function (Excel 365+) returns rows matching your criteria as a live spill array. It updates automatically as source data changes — no manual re-filtering needed.",steps:[{t:"Basic FILTER",d:"=FILTER(A2:C100,B2:B100=\"East\") returns all rows where B='East'."},{t:"AND condition",d:"=FILTER(A2:C100,(B2:B100=\"East\")*(C2:C100>500)) — * means AND."},{t:"OR condition",d:"=FILTER(A2:C100,(B2:B100=\"East\")+(B2:B100=\"West\")) — + means OR."},{t:"Fallback",d:"=FILTER(A2:C100,B2:B100=\"East\",\"No data\") — 3rd arg shows when nothing matches."},{t:"Combine with SORT",d:"=SORT(FILTER(A2:C100,B2:B100=\"East\"),3,-1) — filter then sort in one formula."}],fm:[{s:"=FILTER(A2:C100,B2:B100=\"East\")",d:"Rows where B='East'"},{s:"=FILTER(A:C,(B:B=\"East\")*(C:C>500),\"–\")",d:"AND with fallback"}],tip:"FILTER is fully composable — wrap in SORT, UNIQUE, TAKE, or DROP to build multi-step pipelines in one formula.",imgs:["excel FILTER function dynamic","excel FILTER AND OR criteria","excel FILTER SORT combined"]},
+"SORT & SORTBY":{lv:"advanced",c:"#F97316",sub:"Sort data dynamically as a formula",ex:"<strong>SORT</strong> returns a sorted copy of a range as a spill array without changing source data. <strong>SORTBY</strong> sorts using a separate array as the key — the key doesn't need to be in the output.",steps:[{t:"Basic SORT",d:"=SORT(A2:C100) sorts by first column ascending. Result spills automatically."},{t:"Sort by column",d:"=SORT(A2:C100,2,1) ascending or =SORT(A2:C100,3,-1) descending."},{t:"Multi-level sort",d:"=SORT(A2:C100,{1,2},{1,-1}) — column 1 ascending then column 2 descending."},{t:"SORTBY",d:"=SORTBY(A2:B100,C2:C100,-1) — sorts A:B using C as key (C not in output)."},{t:"Combine with FILTER+UNIQUE",d:"=SORT(UNIQUE(FILTER(A:A,B:B=\"East\"))) — one formula: filter, deduplicate, sort."}],fm:[{s:"=SORT(A2:C100,3,-1)",d:"Sort by column 3 descending"},{s:"=SORTBY(A2:B100,C2:C100,-1)",d:"Sort using external key"}],tip:"=SORT(UNIQUE(A:A)) produces a sorted deduplicated list — perfect as a dynamic dropdown source.",imgs:["excel SORT function spill","excel SORTBY external key","excel SORT UNIQUE dynamic list"]},
+"UNIQUE Function":{lv:"advanced",c:"#F97316",sub:"Extract distinct values dynamically",ex:"<strong>UNIQUE</strong> returns each distinct value from a range once, as a live spill array. It updates automatically when source data changes — replacing the manual Remove Duplicates dialog for reference lists.",steps:[{t:"Unique values",d:"=UNIQUE(A2:A100) returns each distinct value once as a spilled list."},{t:"Unique rows",d:"=UNIQUE(A2:C100) returns unique row combinations across all 3 columns."},{t:"Values appearing exactly once",d:"=UNIQUE(A2:A100,,TRUE) — returns values with no duplicates at all."},{t:"Count unique",d:"=COUNTA(UNIQUE(A2:A100)) counts distinct entries."},{t:"Sorted unique",d:"=SORT(UNIQUE(A2:A100)) — sorted deduplicated list."}],fm:[{s:"=UNIQUE(A2:A100)",d:"Distinct values"},{s:"=SORT(UNIQUE(A2:A100))",d:"Sorted distinct list"},{s:"=COUNTA(UNIQUE(A2:A100))",d:"Count distinct values"}],tip:"Use =SORT(UNIQUE(A:A)) as Data Validation source list — it auto-updates as new values are added.",imgs:["excel UNIQUE function distinct","excel UNIQUE SORT dynamic","excel UNIQUE count distinct"]},
+"SEQUENCE & RANDARRAY":{lv:"advanced",c:"#F97316",sub:"Generate number and random arrays",ex:"<strong>SEQUENCE</strong> generates a series of numbers as a spill array. <strong>RANDARRAY</strong> generates random numbers in any grid size. Both are building blocks for dynamic worksheets.",steps:[{t:"Simple sequence",d:"=SEQUENCE(10) generates 1–10 vertically. =SEQUENCE(1,10) generates horizontally."},{t:"Custom start and step",d:"=SEQUENCE(5,1,0,10) generates 0, 10, 20, 30, 40."},{t:"Date series",d:"=SEQUENCE(12,1,DATE(2024,1,1),30) — 12 approximately monthly dates."},{t:"RANDARRAY",d:"=RANDARRAY(5,3) fills 5×3 array with random numbers 0–1."},{t:"Random integers",d:"=RANDARRAY(5,3,1,100,TRUE) fills 5×3 with random integers 1–100."}],fm:[{s:"=SEQUENCE(10)",d:"1 to 10"},{s:"=SEQUENCE(5,1,0,10)",d:"0, 10, 20, 30, 40"},{s:"=RANDARRAY(5,3,1,100,TRUE)",d:"5×3 random integers 1–100"}],tip:"RANDARRAY recalculates on every sheet change. Paste as values (Ctrl+Alt+V → V) to lock in a set.",imgs:["excel SEQUENCE function series","excel RANDARRAY random numbers","excel dynamic array sequence"]},
+"LET Function":{lv:"advanced",c:"#F97316",sub:"Name variables inside formulas",ex:"<strong>LET</strong> assigns names to intermediate values inside a formula — making complex formulas readable and faster. Each named value is calculated only once, even if referenced multiple times.",steps:[{t:"Basic LET",d:"=LET(x,A1+B1,x*2) — assign x=A1+B1, then use x in the expression."},{t:"Multiple names",d:"=LET(total,SUM(A:A),count,COUNTA(A:A),total/count) — custom average."},{t:"Readable complex formula",d:"=LET(f,FILTER(A:C,B:B=\"East\"),s,SORT(f,3,-1),TAKE(s,10)) — top 10 East rows."},{t:"Performance gain",d:"If the same expensive sub-calculation appears twice, LET computes it once and reuses it."},{t:"Debug with LET",d:"Change the last argument to any intermediate name to inspect what it contains."}],fm:[{s:"=LET(x,A1+B1,y,C1*D1,x+y)",d:"Named intermediate values"},{s:"=LET(tot,SUM(A:A),avg,AVERAGE(A:A),tot/avg)",d:"Compute once, use twice"}],tip:"LET is the single best upgrade for any formula that references the same expensive calculation more than once.",imgs:["excel LET function variable","excel LET readable formula","excel LET performance"]},
+"LAMBDA Function":{lv:"advanced",c:"#F97316",sub:"Create custom reusable functions",ex:"<strong>LAMBDA</strong> lets you define custom functions using worksheet formulas — no VBA. Save them as Named Ranges to use them anywhere like built-in functions.",steps:[{t:"Define LAMBDA",d:"=LAMBDA(a,b,a+b) takes two inputs and returns their sum. Test: =LAMBDA(a,b,a+b)(3,4) → 7."},{t:"Save as named function",d:"Formulas → Name Manager → New. Name: 'AddTax'. Formula: =LAMBDA(price,price*1.2). Now =AddTax(A1) works anywhere."},{t:"Multiple parameters",d:"=LAMBDA(price,rate,price*(1+rate)) — call as =Markup(100,0.15) → 115."},{t:"BYROW",d:"=BYROW(A1:C5,LAMBDA(row,SUM(row))) sums each row individually."},{t:"BYCOL",d:"=BYCOL(A1:C5,LAMBDA(col,AVERAGE(col))) averages each column."}],fm:[{s:"=LAMBDA(x,x^2+2*x+1)",d:"Custom quadratic"},{s:"=BYROW(A1:C5,LAMBDA(r,SUM(r)))",d:"Sum each row"}],tip:"Test your LAMBDA directly in a cell first: =LAMBDA(x,x*2)(5) returns 10 before you save it as a name.",imgs:["excel LAMBDA custom function","excel LAMBDA named range","excel BYROW BYCOL lambda"]},
+"Array Formulas (CSE)":{lv:"advanced",c:"#F97316",sub:"Process multiple values simultaneously",ex:"<strong>Array formulas</strong> process entire ranges at once. Older Excel uses Ctrl+Shift+Enter — they appear in {}. Excel 365 handles most arrays natively without CSE through dynamic arrays.",steps:[{t:"Enter CSE formula",d:"Type formula, press Ctrl+Shift+Enter (not just Enter). Curly braces {} appear automatically."},{t:"Count unique (classic)",d:"{=SUM(1/COUNTIF(A2:A100,A2:A100))} counts distinct values without UNIQUE."},{t:"Multi-criteria sum (classic)",d:"{=SUM((A2:A100=\"East\")*(B2:B100>500)*C2:C100)} — old method, SUMIFS is easier now."},{t:"MMULT",d:"=MMULT(A1:C3,E1:G3) multiplies two matrices."},{t:"Modern arrays",d:"In Excel 365, most formulas spill automatically — CSE is rarely needed."}],fm:[{s:"{=SUM(1/COUNTIF(A2:A100,A2:A100))}",d:"Count distinct (legacy)"},{s:"=MMULT(A1:C3,E1:G3)",d:"Matrix multiplication"}],tip:"In Excel 365 you almost never need CSE — dynamic arrays handle spilling automatically.",imgs:["excel array formula CSE curly braces","excel MMULT matrix","excel array formula criteria"]},
+"Power Query Basics":{lv:"advanced",c:"#F97316",sub:"Import and transform data automatically",ex:"<strong>Power Query</strong> connects to data sources — Excel files, CSVs, databases, web pages — and cleans/transforms through recorded steps. Every transformation is repeatable with one Refresh click.",steps:[{t:"Open Power Query",d:"Data → Get Data → From File / From Database / From Web."},{t:"Connect to a file",d:"Get Data → From File → From Excel Workbook or CSV. Click Transform Data."},{t:"Apply transformations",d:"Home, Transform, Add Column tabs: remove columns, rename, change types, filter, sort."},{t:"Merge queries",d:"Home → Merge Queries — join two tables like a VLOOKUP on a key column."},{t:"Load to worksheet",d:"Home → Close & Load. Refresh with Data → Refresh All."}],fm:[],tip:"Every step is recorded in 'Applied Steps' panel. Click any step to return to that point — Power Query is fully non-destructive.",imgs:["excel power query editor","excel get data transform steps","excel power query merge refresh"]},
+"Power Query Advanced":{lv:"advanced",c:"#F97316",sub:"M language and complex transformations",ex:"Power Query's <strong>M language</strong> is behind every step. Understanding M lets you write custom columns, unpivot data, and automate complex multi-step pipelines.",steps:[{t:"Unpivot columns",d:"Select value columns → Transform → Unpivot Columns. Turns wide data tall."},{t:"Custom column",d:"Add Column → Custom Column → write M formula: e.g. [Price]*[Qty] for revenue."},{t:"Group by",d:"Home → Group By → choose grouping column and aggregation (Sum, Count, Average)."},{t:"Append queries",d:"Home → Append Queries — combine tables vertically (stack sheets on top of each other)."},{t:"Edit M directly",d:"Click any Applied Step — the M formula bar shows the code. Edit to customise."}],fm:[{s:"= Table.AddColumn(prev, \"Revenue\", each [Price]*[Qty])",d:"Custom column in M"}],tip:"Disable 'Load to Worksheet' on intermediate queries — only load your final cleaned output.",imgs:["excel power query M language","excel unpivot columns","excel power query group append"]},
+"What-If Analysis":{lv:"advanced",c:"#F97316",sub:"Model scenarios and find target inputs",ex:"<strong>Goal Seek</strong> works backwards from a target. <strong>Data Tables</strong> show all outcomes for a range of inputs. <strong>Scenario Manager</strong> saves and compares named sets of inputs.",steps:[{t:"Goal Seek",d:"Data → What-If Analysis → Goal Seek. Set formula cell to target by changing input cell."},{t:"One-variable Data Table",d:"Inputs down a column, formula beside top input. Data → What-If → Data Table → Column input cell."},{t:"Two-variable Data Table",d:"Inputs in both a row and column. Formula in corner. Data Table → Row and Column input cells."},{t:"Scenario Manager",d:"Data → What-If → Scenario Manager → Add. Save named input sets to compare."},{t:"Scenario Summary",d:"Scenario Manager → Summary. Creates a formatted side-by-side comparison table."}],fm:[],tip:"Data Tables recalculate on every sheet change — set Calculation to Manual (Formulas → Calculation Options) for large tables.",imgs:["excel goal seek what if","excel data table one two variable","excel scenario manager summary"]},
+"Solver Add-in":{lv:"advanced",c:"#F97316",sub:"Optimise with multiple constraints",ex:"<strong>Solver</strong> finds input values that maximise, minimise, or hit a target, subject to constraints. Useful for resource allocation, scheduling, and portfolio optimisation problems.",steps:[{t:"Enable Solver",d:"File → Options → Add-ins → Excel Add-ins → check Solver → OK."},{t:"Set objective",d:"Data → Solver → Set Objective: the cell to maximise, minimise, or set to a value."},{t:"Variable cells",d:"'By Changing Variable Cells' — cells Solver can adjust."},{t:"Add constraints",d:"Click Add → cell, operator (<=, >=, =, integer, binary), and limit value."},{t:"Run Solver",d:"Click Solve. Accept the optimal solution or restore original values."}],fm:[],tip:"Use 'Simplex LP' for linear problems. 'GRG Nonlinear' for smooth curves. 'Evolutionary' for integer/complex problems.",imgs:["excel solver add-in optimize","excel solver constraints","excel solver solution result"]},
+"Statistical Functions":{lv:"advanced",c:"#F97316",sub:"Analyse distributions and relationships",ex:"Excel has a full statistical library: <strong>STDEV</strong> (standard deviation), <strong>CORREL</strong> (correlation), <strong>PERCENTILE</strong>, <strong>QUARTILE</strong>, <strong>FORECAST</strong>, and <strong>LINEST</strong> for regression analysis.",steps:[{t:"Standard deviation",d:"=STDEV(B2:B100) sample std dev. =STDEVP for population."},{t:"Correlation",d:"=CORREL(A2:A100,B2:B100) — -1 to 1. Near 1 = strong positive correlation."},{t:"Percentiles",d:"=PERCENTILE(B2:B100,0.9) — value at 90th percentile. =QUARTILE(B:B,1) — Q1 (25th percentile)."},{t:"Forecast",d:"=FORECAST.LINEAR(x,known_ys,known_xs) — predicts y for given x using linear regression."},{t:"LINEST",d:"=LINEST(y_range,x_range,TRUE,TRUE) — returns slope, intercept, R², standard error."}],fm:[{s:"=STDEV(B2:B100)",d:"Sample standard deviation"},{s:"=CORREL(A2:A100,B2:B100)",d:"Correlation coefficient"},{s:"=PERCENTILE(B2:B100,0.9)",d:"90th percentile"}],tip:"Add a trendline to a scatter chart (right-click a point → Add Trendline) to visually see regression without formulas.",imgs:["excel STDEV CORREL statistical","excel percentile quartile","excel FORECAST LINEST regression"]},
+"Named Ranges & Dynamic Names":{lv:"advanced",c:"#F97316",sub:"Name cells and ranges for cleaner formulas",ex:"<strong>Named Ranges</strong> give cells meaningful names — 'TaxRate' instead of '$B$1'. Formulas become self-documenting. <strong>Dynamic Named Ranges</strong> expand automatically with new data.",steps:[{t:"Create a named range",d:"Select cells → Formulas → Define Name. Or type name in the Name Box and press Enter."},{t:"Use in formulas",d:"=SUM(SalesData) instead of =SUM($B$2:$B$100) — much more readable."},{t:"Manage names",d:"Formulas → Name Manager. View, edit, delete all named ranges."},{t:"Dynamic range",d:"=OFFSET($B$2,0,0,COUNTA($B:$B)-1,1) expands automatically as data is added."},{t:"Table references",d:"=SalesTable[Revenue] is the preferred modern dynamic reference — no OFFSET needed."}],fm:[{s:"=SUM(Revenue)",d:"Sum named range 'Revenue'"},{s:"=OFFSET($B$2,0,0,COUNTA($B:$B)-1,1)",d:"Dynamic expanding range"}],tip:"Scope named ranges to a specific sheet to avoid naming conflicts in multi-sheet workbooks.",imgs:["excel named range define name","excel name manager formulas","excel named range formula"]},
+"Advanced Charts":{lv:"advanced",c:"#F97316",sub:"Waterfall, combo, and dynamic charts",ex:"Beyond basic charts: <strong>Combo Charts</strong> mix two types with a secondary axis. <strong>Waterfall Charts</strong> show running totals. <strong>Treemaps</strong> and <strong>Sunburst</strong> visualise hierarchies. Dynamic charts update automatically.",steps:[{t:"Combo chart",d:"Insert → Combo Chart → mix column + line. Set margin % as line on secondary axis."},{t:"Waterfall chart",d:"Insert → Waterfall. Right-click subtotals/totals → Set as Total."},{t:"Treemap / Sunburst",d:"Insert → Hierarchy → Treemap (area) or Sunburst (multi-level pie)."},{t:"Dynamic chart title",d:"Click title → Formula Bar → type =Sheet1!A1 to link to a cell."},{t:"Named range as source",d:"In Select Data dialog, replace range with a named range that expands with data."}],fm:[],tip:"Right-click any chart element → Format — every detail is configurable: axis scales, gap widths, line styles.",imgs:["excel combo chart secondary axis","excel waterfall chart totals","excel treemap sunburst chart"]},
+"Protecting Workbooks & Sheets":{lv:"advanced",c:"#F97316",sub:"Control access and editing",ex:"Excel lets you <strong>lock cells</strong> so formulas can't be overwritten, <strong>protect sheets</strong> to allow editing only in specific areas, and <strong>encrypt workbooks</strong> with passwords.",steps:[{t:"Unlock input cells",d:"Select editable cells → Ctrl+1 → Protection tab → uncheck 'Locked'."},{t:"Protect sheet",d:"Review → Protect Sheet → set password → choose allowed actions."},{t:"Unprotect",d:"Review → Unprotect Sheet → enter password."},{t:"Protect workbook structure",d:"Review → Protect Workbook — prevents adding, deleting, or moving sheets."},{t:"Encrypt with password",d:"File → Info → Protect Workbook → Encrypt with Password."}],fm:[],tip:"Ctrl+1 → Protection → 'Hidden' hides formula bar contents even when cells are locked — protects formula IP.",imgs:["excel protect sheet lock cells","excel protect workbook password","excel review protection tab"]},
+"VBA Basics":{lv:"expert",c:"#EF4444",sub:"Introduction to Excel automation",ex:"<strong>VBA</strong> (Visual Basic for Applications) is Excel's built-in programming language. The Macro Recorder generates VBA automatically. Manual coding gives full control — automate any action and build complex workflows.",steps:[{t:"Enable Developer tab",d:"File → Options → Customize Ribbon → check Developer → OK."},{t:"Record a macro",d:"Developer → Record Macro → name it → perform actions → Stop Recording."},{t:"Open VBA Editor",d:"Alt+F11. Project tree on left, code modules on right."},{t:"Read recorded code",d:"Developer → Macros → your macro → Edit. Read the generated VBA."},{t:"Run a macro",d:"Developer → Macros → Run. Or press the shortcut key assigned during recording."}],fm:[{s:"Sub HelloWorld()\n  MsgBox \"Hello!\"\nEnd Sub",d:"Minimal VBA procedure"}],tip:"Study generated code in the VBA Editor — recorded code teaches you object/property/method syntax quickly.",imgs:["excel developer tab macro","excel VBA editor module","excel run macro developer"]},
+"VBA Variables & Data Types":{lv:"expert",c:"#EF4444",sub:"Store and manage data in code",ex:"<strong>Variables</strong> store data during code execution. Declaring the right <strong>data type</strong> makes code faster and prevents bugs. Key types: Long (integer), Double (decimal), String (text), Boolean (true/false).",steps:[{t:"Declare variables",d:"Dim myName As String, myAge As Long, myScore As Double — declare at top of procedure."},{t:"Assign values",d:"myName = \"Alice\" : myAge = 30 : myScore = 98.5"},{t:"Option Explicit",d:"Add Option Explicit at top of every module — forces variable declaration, catches typos."},{t:"Constants",d:"Const TAX_RATE As Double = 0.2 — for values that never change. Uppercase by convention."},{t:"Object variables",d:"Dim ws As Worksheet : Set ws = Sheets(\"Data\") — use Set to assign object variables."}],fm:[{s:"Dim total As Double\ntotal = Range(\"A1\").Value * 1.2",d:"Declare, assign, compute"},{s:"Const PI As Double = 3.14159",d:"Declare a constant"}],tip:"Always use Long instead of Integer — Long handles larger numbers and is faster on 64-bit Excel.",imgs:["excel VBA variables declare","excel VBA data types","excel VBA option explicit"]},
+"VBA Loops":{lv:"expert",c:"#EF4444",sub:"Repeat actions across rows and ranges",ex:"<strong>Loops</strong> are the core of automation — they repeat an action for every row, cell, or item. VBA has three main loops: <strong>For Next</strong> (count-based), <strong>For Each</strong> (collection-based), <strong>Do While</strong> (condition-based).",steps:[{t:"For Next",d:"For i = 1 To 100 : Cells(i,1).Value = i*2 : Next i — writes 2,4...200 into A1:A100."},{t:"For Each",d:"For Each cell In Range(\"A1:A50\") : cell.Value = cell.Value * 1.1 : Next cell — all values +10%."},{t:"Do While",d:"Dim r As Long : r=2 : Do While Cells(r,1).Value<>\"\" : r=r+1 : Loop — finds last row."},{t:"Exit loop early",d:"Exit For or Exit Do to break out when a condition is met."},{t:"Loop through sheets",d:"For Each ws In ThisWorkbook.Worksheets : MsgBox ws.Name : Next ws"}],fm:[{s:"For i=1 To 10\n  Cells(i,1).Value=i\nNext i",d:"Write 1–10 to column A"},{s:"For Each ws In Worksheets\n  ws.Cells.ClearContents\nNext ws",d:"Clear all sheets"}],tip:"Add Application.ScreenUpdating = False before large loops — makes them run dramatically faster.",imgs:["excel VBA for loop","excel VBA for each collection","excel VBA do while loop"]},
+"VBA Conditionals & Error Handling":{lv:"expert",c:"#EF4444",sub:"Logic and robust error management",ex:"<strong>If/Then/Else</strong> makes decisions. <strong>Select Case</strong> is cleaner for one variable against many values. <strong>On Error</strong> handles runtime errors gracefully — preventing crashes in production macros.",steps:[{t:"If/Then/Else",d:"If total>100 Then MsgBox \"High\" ElseIf total>50 Then MsgBox \"Med\" Else MsgBox \"Low\" End If"},{t:"Select Case",d:"Select Case region : Case \"East\" : tax=0.1 : Case \"West\" : tax=0.08 : Case Else : tax=0.05 : End Select"},{t:"On Error Resume Next",d:"Ignores errors and continues. Use sparingly — always reset with On Error GoTo 0."},{t:"On Error GoTo",d:"On Error GoTo ErrHandler — jumps to error handler. Add ErrHandler: label at the bottom."},{t:"Error object",d:"Err.Number gives error code. Err.Description gives the message."}],fm:[{s:"If x>0 Then\n  result=\"Pos\"\nElse\n  result=\"Neg\"\nEnd If",d:"If/Then/Else"},{s:"On Error GoTo ErrHandler\n  'risky code\nErrHandler:\n  MsgBox Err.Description",d:"Error handling pattern"}],tip:"Never leave 'On Error Resume Next' active for the whole procedure — scope it tightly around just the line that might error.",imgs:["excel VBA if then else","excel VBA select case","excel VBA error handling"]},
+"VBA Working with Ranges":{lv:"expert",c:"#EF4444",sub:"Read and write cells programmatically",ex:"The <strong>Range</strong> and <strong>Cells</strong> objects read and write cell data. Methods like <strong>End</strong>, <strong>Resize</strong>, <strong>Offset</strong>, and <strong>CurrentRegion</strong> make working with dynamic datasets easy.",steps:[{t:"Read a cell",d:"Dim val As Double : val = Range(\"B2\").Value — or Cells(2,2).Value (row, col)."},{t:"Write to a cell",d:"Range(\"C1\").Value = \"Done\" or Cells(1,3).Value = 42"},{t:"Find last row",d:"lastRow = Cells(Rows.Count,1).End(xlUp).Row — finds last filled row in column A."},{t:"Loop with last row",d:"For i=2 To lastRow : Cells(i,3)=Cells(i,1)*Cells(i,2) : Next i"},{t:"CurrentRegion",d:"Range(\"A1\").CurrentRegion selects the contiguous data block around A1."}],fm:[{s:"lastRow = Cells(Rows.Count,1).End(xlUp).Row",d:"Find last used row in column A"},{s:"Range(\"A1\").CurrentRegion.Copy",d:"Copy the contiguous data block"}],tip:"Always find lastRow dynamically — hardcoding row numbers breaks when data grows or shrinks.",imgs:["excel VBA range cells object","excel VBA last row End xlUp","excel VBA loop data rows"]},
+"VBA UserForms":{lv:"expert",c:"#EF4444",sub:"Build custom input dialog boxes",ex:"<strong>UserForms</strong> are custom dialog boxes with controls — TextBoxes, ListBoxes, Buttons, CheckBoxes. They give users a clean interface for data entry without touching cells directly.",steps:[{t:"Insert a UserForm",d:"VBA Editor → Insert → UserForm. A blank form and the Toolbox appear."},{t:"Add controls",d:"Drag TextBox, Label, CommandButton from Toolbox. Set Name and Caption in Properties."},{t:"Write button code",d:"Double-click Submit button → write code: Range(\"A1\").Value = TextBox1.Value"},{t:"Show the form",d:"From a module Sub: UserForm1.Show — displays the form. Me.Hide closes it from within."},{t:"Validate input",d:"In click code: If TextBox1.Value = \"\" Then MsgBox \"Required!\" : Exit Sub"}],fm:[{s:"Private Sub btnSubmit_Click()\n  Range(\"A1\").Value = txtName.Value\n  Me.Hide\nEnd Sub",d:"Submit button writes to cell"}],tip:"Set ShowModal = False to allow users to interact with the spreadsheet while the form stays open.",imgs:["excel VBA userform controls","excel VBA textbox button form","excel VBA userform show"]},
+"Power Pivot & Data Model":{lv:"expert",c:"#EF4444",sub:"Multi-table analysis without VLOOKUP",ex:"<strong>Power Pivot</strong> loads multiple tables into an in-memory <strong>Data Model</strong> with relationships between them. Pivot Tables built on the model can draw fields from any table — no VLOOKUP columns needed.",steps:[{t:"Load to Data Model",d:"Click inside table → Power Pivot → Add to Data Model. Repeat for each table."},{t:"Open Power Pivot",d:"Power Pivot → Manage. All tables appear as tabs."},{t:"Create relationships",d:"Diagram View → drag CustomerID from one table to matching column in another."},{t:"Build Data Model Pivot Table",d:"Insert → PivotTable → Use this workbook's Data Model. All tables in field list."},{t:"Use cross-table fields",d:"Drag fields from different tables — relationships handle joins automatically."}],fm:[],tip:"Star schema design works best: one fact table (Transactions) surrounded by dimension tables (Customers, Products, Dates).",imgs:["excel power pivot data model","excel power pivot diagram relationships","excel data model pivot cross-table"]},
+"DAX Measures":{lv:"expert",c:"#EF4444",sub:"Formula language for the Data Model",ex:"<strong>DAX</strong> is the formula language of Power Pivot. <strong>Measures</strong> calculate dynamically based on Pivot Table filter context. They're different from calculated columns — measures respond to every filter, slicer, and row in the Pivot Table.",steps:[{t:"Create a measure",d:"In Power Pivot → click below column → type in formula bar: Total Sales := SUM(Sales[Amount])"},{t:"Reference measures",d:"Profit Margin := DIVIDE([Gross Profit],[Total Revenue],0)"},{t:"Use CALCULATE",d:"East Sales := CALCULATE([Total Sales],Sales[Region]=\"East\")"},{t:"ALL function",d:"All Sales := CALCULATE([Total Sales],ALL(Sales)) — removes all filters for grand total."},{t:"Time Intelligence",d:"YTD Sales := CALCULATE([Total Sales],DATESYTD('Calendar'[Date]))"}],fm:[{s:"Total Sales := SUM(Sales[Amount])",d:"Basic measure"},{s:"YTD := CALCULATE([Total Sales],DATESYTD('Date'[Date]))",d:"Year to date"}],tip:"Measures evaluate in a filter context set by rows, columns, slicers, and filters — understanding context is the key to DAX.",imgs:["excel DAX measure power pivot","excel CALCULATE DAX filter","excel DAX time intelligence"]},
+"DAX CALCULATE & Context":{lv:"expert",c:"#EF4444",sub:"Master filter context modification",ex:"<strong>CALCULATE</strong> is the most important DAX function — it evaluates an expression while modifying filter context. Nearly every useful DAX measure uses CALCULATE to compare, calculate shares, or build time comparisons.",steps:[{t:"Fixed filter override",d:"East Pct := DIVIDE(CALCULATE([Sales],Region[Region]=\"East\"),CALCULATE([Sales],ALL(Region)))"},{t:"Remove all filters",d:"Grand Total := CALCULATE([Sales],ALL(Sales)) — ignores all Pivot Table filters."},{t:"ALLEXCEPT",d:"ALLEXCEPT(Sales,Sales[Region]) removes all filters except Region — useful for subtotals."},{t:"RELATED",d:"=RELATED(Customer[Segment]) in a calculated column — like a VLOOKUP from a related table."},{t:"Same period last year",d:"LY := CALCULATE([Sales],SAMEPERIODLASTYEAR('Date'[Date]))"}],fm:[{s:"Share := DIVIDE([Sales],CALCULATE([Sales],ALL(Sales)))",d:"% of grand total"},{s:"LY Sales := CALCULATE([Sales],SAMEPERIODLASTYEAR('Date'[Date]))",d:"Prior year comparison"}],tip:"Always build a separate Calendar table with every date and relate it — it unlocks all DAX time intelligence functions.",imgs:["excel CALCULATE DAX measure","excel DAX ALL ALLEXCEPT","excel DAX same period last year"]},
+"Professional Dashboards":{lv:"expert",c:"#EF4444",sub:"Build interactive executive dashboards",ex:"A professional Excel <strong>dashboard</strong> tells a story at a glance. Great dashboards have clear hierarchy, a consistent palette, minimal clutter, and interactive slicers that let users explore data themselves.",steps:[{t:"Plan the layout",d:"Sketch on paper: KPIs top, charts middle, details bottom. Plan before building."},{t:"Separate data from display",d:"Raw data on hidden sheets. Dashboard sheet = only charts, shapes, summary formulas."},{t:"Consistent color palette",d:"2–3 colors max. One for positives, one for negatives, gray for supporting info."},{t:"Add slicers",d:"Connect slicers to all Pivot Tables so users filter region/period/category with one click."},{t:"Remove clutter",d:"View → uncheck Gridlines and Headings. Set background. Remove chart borders."}],fm:[],tip:"Camera Tool (add via Quick Access Toolbar) creates live linked pictures of any range — perfect for KPI cards.",imgs:["excel dashboard design professional","excel KPI dashboard slicers","excel dashboard clean layout"]},
+"Office Scripts & Automation":{lv:"expert",c:"#EF4444",sub:"Modern JavaScript-based automation",ex:"<strong>Office Scripts</strong> is the modern alternative to VBA — it uses TypeScript and runs in Excel for web and desktop. Scripts can be triggered by <strong>Power Automate</strong> to automate workflows without opening Excel manually.",steps:[{t:"Open Automate tab",d:"The Automate tab in Excel (web or desktop) has Record Actions and Code Editor."},{t:"Record actions",d:"Automate → Record Actions → perform steps → Stop. TypeScript script is auto-generated."},{t:"Edit the script",d:"Automate → Code Editor. Edit TypeScript with IntelliSense autocomplete."},{t:"Run manually",d:"Automate → Run → Run Script. Executes on the active workbook."},{t:"Trigger with Power Automate",d:"In Power Automate, use 'Run script' action to trigger on email, schedule, form, etc."}],fm:[{s:"function main(workbook: ExcelScript.Workbook) {\n  let sheet = workbook.getActiveWorksheet();\n  sheet.getRange(\"A1\").setValue(\"Hello\");\n}",d:"Minimal Office Script"}],tip:"Office Scripts run in Excel Online on any OS — unlike VBA which requires the Windows desktop app.",imgs:["excel office scripts automate tab","excel office scripts typescript","excel power automate run script"]},
+"Python in Excel":{lv:"expert",c:"#EF4444",sub:"Run Python directly in cells",ex:"<strong>Python in Excel</strong> (Microsoft 365) lets you write Python in cells using =PY(). You get pandas, matplotlib, seaborn, scikit-learn — the full scientific stack without leaving Excel.",steps:[{t:"Write a PY formula",d:"Type =PY( in a cell, write Python code, press Ctrl+Enter. Output spills."},{t:"Reference Excel ranges",d:"Use xl(\"A1:C100\") inside Python to get an Excel range as a pandas DataFrame."},{t:"Create a chart",d:"Use matplotlib or seaborn inside =PY() to generate charts that appear as images."},{t:"Run pandas analysis",d:"import pandas as pd; df=xl(\"SalesTable[#All]\",headers=True); df.groupby(\"Region\").sum()"},{t:"Descriptive statistics",d:"xl(\"A1:C100\",headers=True).describe() returns a full stats table in one formula."}],fm:[{s:"=PY(\"xl('A1:C100',headers=True).describe()\")",d:"Pandas describe() on a range"}],tip:"Python in Excel runs in Microsoft's cloud — data leaves your machine. Check compliance before using with sensitive data.",imgs:["excel python in excel PY formula","excel pandas matplotlib python","excel python in excel chart"]},
 };
-
-// ════════════════════════════════════════════════════════════════════════════
-// CURRICULUM STRUCTURE
-// ════════════════════════════════════════════════════════════════════════════
-const CURRICULUM = [
-  {lv:"beginner",c:"#22C55E",label:"Beginner",sections:[
-    {title:"🖥️ Interface",items:["The Excel Interface","Ribbon & Tabs","Worksheets & Workbooks","Cell References","Freeze Panes & Split Views"]},
-    {title:"📝 Data Entry",items:["Entering Data","SUM & AutoSum","AVERAGE MIN MAX","COUNT & COUNTA","ROUND ROUNDUP ROUNDDOWN"]},
-    {title:"🎨 Formatting",items:["Number & Date Formats","Conditional Formatting Basics"]},
-    {title:"📅 Dates & Charts",items:["TODAY & NOW","Creating Your First Chart"]},
-  ]},
-  {lv:"intermediate",c:"#EAB308",label:"Intermediate",sections:[
-    {title:"🔍 Lookups",items:["VLOOKUP The Classic Lookup","XLOOKUP Modern Lookup","INDEX & MATCH"]},
-    {title:"🧠 Logic & Aggregation",items:["IF Statement Basics","COUNTIF & COUNTIFS","SUMIF & SUMIFS"]},
-    {title:"✍️ Text",items:["LEFT RIGHT MID","TRIM SUBSTITUTE REPLACE"]},
-    {title:"🔄 Pivot Tables & Data",items:["Creating a Pivot Table","Sort & Filter"]},
-  ]},
-  {lv:"advanced",c:"#F97316",label:"Advanced",sections:[
-    {title:"⚡ Dynamic Arrays",items:["FILTER Dynamic Filtering","SORT & SORTBY","UNIQUE Remove Duplicates","LET & LAMBDA Functions"]},
-    {title:"🧪 Analysis",items:["Goal Seek"]},
-  ]},
-  {lv:"expert",c:"#EF4444",label:"Expert",sections:[
-    {title:"🤖 VBA",items:["Recording & Running Macros","Variables Loops & Conditionals"]},
-    {title:"🗄️ Power Pivot & DAX",items:["Building a Data Model","CALCULATE Core DAX"]},
-    {title:"📱 Dashboards",items:["Dashboard Design Principles"]},
-  ]},
+const C=[
+{lv:"beginner",c:"#22C55E",label:"Beginner",sections:[
+  {t:"🖥️ Interface & Navigation",i:["The Excel Interface","Ribbon & Tabs","Worksheets & Workbooks","Cell References","Freeze Panes & Split Views"]},
+  {t:"📝 Data Entry",i:["Entering & Editing Data","AutoFill & Flash Fill","Paste Special","Find & Replace"]},
+  {t:"🔢 Core Formulas",i:["SUM & AutoSum","AVERAGE MIN MAX MEDIAN","COUNT COUNTA COUNTBLANK","ROUND ROUNDUP ROUNDDOWN"]},
+  {t:"🎨 Formatting",i:["Number & Date Formats","Cell Formatting & Styles","Conditional Formatting"]},
+  {t:"📅 Date & Time",i:["TODAY NOW DATE Functions","DATEDIF & Date Math","WEEKDAY WORKDAY EDATE"]},
+  {t:"📊 Charts & Print",i:["Basic Charts","Chart Types & Best Practices","Print & Page Setup"]},
+]},
+{lv:"intermediate",c:"#EAB308",label:"Intermediate",sections:[
+  {t:"🔍 Lookup Functions",i:["VLOOKUP","HLOOKUP","XLOOKUP","INDEX & MATCH"]},
+  {t:"🧠 Logic",i:["IF IFS Nested IF","AND OR NOT SWITCH","IFERROR IFNA"]},
+  {t:"📐 Conditional Aggregation",i:["COUNTIF & COUNTIFS","SUMIF & SUMIFS","AVERAGEIF & AVERAGEIFS"]},
+  {t:"✍️ Text & Conversion",i:["Text Functions","TEXT & VALUE Functions"]},
+  {t:"🔄 Pivot Tables",i:["Pivot Tables","Pivot Table Grouping & Calculated Fields","Slicers & Timelines"]},
+  {t:"🗂️ Data Management",i:["Sort & Filter","Advanced Filter","Data Validation","Remove Duplicates & Text to Columns","Tables (ListObjects)"]},
+]},
+{lv:"advanced",c:"#F97316",label:"Advanced",sections:[
+  {t:"⚡ Dynamic Arrays",i:["FILTER Function","SORT & SORTBY","UNIQUE Function","SEQUENCE & RANDARRAY"]},
+  {t:"🧩 Modern Formulas",i:["LET Function","LAMBDA Function","Array Formulas (CSE)"]},
+  {t:"🔧 Power Query",i:["Power Query Basics","Power Query Advanced"]},
+  {t:"🧪 Analysis Tools",i:["What-If Analysis","Solver Add-in","Statistical Functions"]},
+  {t:"🏗️ Structure",i:["Named Ranges & Dynamic Names","Advanced Charts","Protecting Workbooks & Sheets"]},
+]},
+{lv:"expert",c:"#EF4444",label:"Expert",sections:[
+  {t:"🤖 VBA",i:["VBA Basics","VBA Variables & Data Types","VBA Loops","VBA Conditionals & Error Handling","VBA Working with Ranges","VBA UserForms"]},
+  {t:"🗄️ Power Pivot & DAX",i:["Power Pivot & Data Model","DAX Measures","DAX CALCULATE & Context"]},
+  {t:"📱 Dashboards & Automation",i:["Professional Dashboards","Office Scripts & Automation","Python in Excel"]},
+]},
 ];
+let curLv="all",activeKey=null;
+let done=new Set(JSON.parse(localStorage.getItem("xmf_done")||"[]"));
+function save(){localStorage.setItem("xmf_done",JSON.stringify([...done]));}
+function totT(){let n=0;C.forEach(l=>l.sections.forEach(s=>n+=s.i.length));return n;}
+function updHP(){const p=Math.round((done.size/totT())*100);document.getElementById("hp").textContent=p+"%";document.getElementById("hf").style.width=p+"%";}
 
-// ════════════════════════════════════════════════════════════════════════════
-// STATE
-// ════════════════════════════════════════════════════════════════════════════
-let currentLv = "all";
-let activeKey = null;
-let done = new Set(JSON.parse(localStorage.getItem("xm2_done")||"[]"));
-function save(){ localStorage.setItem("xm2_done",JSON.stringify([...done])); }
-function totalT(){ let n=0; CURRICULUM.forEach(l=>l.sections.forEach(s=>n+=s.items.length)); return n; }
-function doneT(){ return done.size; }
-function updateHeaderProgress(){
-  const pct=Math.round((doneT()/totalT())*100);
-  document.getElementById("hdrPct").textContent=pct+"%";
-  document.getElementById("hdrFill").style.width=pct+"%";
+function renderVisuals(key,D){
+  const svgs=getTopicSVGs(key);
+  return D.imgs.map((label,i)=>{
+    const svg=svgs[i]||svgs[0];
+    return `<div class="icard" style="overflow:hidden"><div style="height:120px;overflow:hidden">${svg}</div><div class="ilbl">${label}</div></div>`;
+  }).join("");
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-// SIDEBAR
-// ════════════════════════════════════════════════════════════════════════════
-function buildSB(lv){
-  const sb=document.getElementById("sb");
-  sb.innerHTML="";
-  const levels=lv==="all"?CURRICULUM:CURRICULUM.filter(l=>l.lv===lv);
-  levels.forEach(lvData=>{
-    lvData.sections.forEach(sec=>{
-      const wrap=document.createElement("div"); wrap.className="sb-sec";
-      const head=document.createElement("div"); head.className="sb-head";
-      head.innerHTML=`<span style="color:${lvData.c};font-size:7px">●</span>${sec.title}<span class="arrow">▼</span>`;
-      const items=document.createElement("div"); items.className="sb-items";
-      sec.items.forEach(item=>{
-        const isDone=done.has(item);
-        const el=document.createElement("div");
-        el.className="sb-item"+(activeKey===item?" active":"");
-        el.innerHTML=`<span class="ck" style="color:${isDone?"#22C55E":""}">${isDone?"✓":"○"}</span>${item}`;
-        el.onclick=()=>openLesson(item,lvData,el);
-        items.appendChild(el);
-      });
-      head.onclick=()=>{
-        const closed=items.style.display==="none";
-        items.style.display=closed?"":"none";
-        head.classList.toggle("closed",!closed);
-      };
-      wrap.appendChild(head); wrap.appendChild(items);
-      sb.appendChild(wrap);
+function getTopicSVGs(key){
+  const lv=(L[key]||{}).lv||"beginner";
+  const pal=lv==="beginner"?["#052e16","#166534","#22c55e","#86efac"]:
+             lv==="intermediate"?["#422006","#92400e","#d97706","#fde68a"]:
+             lv==="advanced"?["#431407","#9a3412","#f97316","#fed7aa"]:
+             ["#450a0a","#991b1b","#ef4444","#fca5a5"];
+  const [dark,mid,accent,light]=pal;
+
+  function fml(title,formula,result){
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="120" viewBox="0 0 224 120">
+      <rect width="224" height="120" fill="${dark}"/>
+      <rect x="8" y="8" width="208" height="104" fill="${mid}" rx="6" opacity="0.4"/>
+      <text x="16" y="23" fill="${light}" font-size="9" font-weight="700" font-family="sans-serif">${title}</text>
+      <rect x="12" y="28" width="200" height="26" fill="rgba(0,0,0,0.5)" rx="4"/>
+      <text x="20" y="46" fill="${accent}" font-size="10" font-family="monospace">${formula}</text>
+      <line x1="12" y1="64" x2="212" y2="64" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+      <text x="16" y="80" fill="rgba(255,255,255,.45)" font-size="9" font-family="sans-serif">Result:</text>
+      <text x="58" y="80" fill="${light}" font-size="11" font-weight="600" font-family="monospace">${result}</text>
+      <circle cx="196" cy="95" r="10" fill="${accent}30" stroke="${accent}" stroke-width="1.5"/>
+      <text x="196" y="99" text-anchor="middle" fill="${accent}" font-size="11">✓</text>
+    </svg>`;
+  }
+
+  function bar(title,vals,labs){
+    const mx=Math.max(...vals)||1;
+    const bw=24,gap=6,ox=12,oy=18,ch=64;
+    let b="";
+    vals.forEach((v,i)=>{
+      const bh=Math.round((v/mx)*ch);
+      const x=ox+i*(bw+gap);
+      b+=`<rect x="${x}" y="${oy+ch-bh}" width="${bw}" height="${bh}" fill="${accent}" rx="2" opacity="${0.55+i*0.07}"/>`;
+      if(labs&&labs[i])b+=`<text x="${x+bw/2}" y="${oy+ch+10}" text-anchor="middle" fill="${light}" font-size="7" font-family="sans-serif">${labs[i]}</text>`;
+      b+=`<text x="${x+bw/2}" y="${oy+ch-bh-3}" text-anchor="middle" fill="${accent}" font-size="8" font-family="monospace">${v}</text>`;
     });
-  });
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="120" viewBox="0 0 224 120">
+      <rect width="224" height="120" fill="${dark}"/>
+      <line x1="${ox}" y1="${oy}" x2="${ox}" y2="${oy+ch}" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <line x1="${ox}" y1="${oy+ch}" x2="212" y2="${oy+ch}" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <text x="112" y="12" text-anchor="middle" fill="${light}" font-size="9" font-weight="700" font-family="sans-serif">${title}</text>
+      ${b}
+    </svg>`;
+  }
+
+  function line(title,pts){
+    const mx=Math.max(...pts),mn=Math.min(...pts);
+    const ox=14,oy=18,w=196,h=68;
+    const xs=pts.map((_,i)=>ox+Math.round(i*(w/(pts.length-1))));
+    const ys=pts.map(v=>oy+h-Math.round(((v-mn)/((mx-mn)||1))*h));
+    const path="M"+xs.map((x,i)=>`${x},${ys[i]}`).join("L");
+    const area=path+`L${xs[xs.length-1]},${oy+h}L${xs[0]},${oy+h}Z`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="120" viewBox="0 0 224 120">
+      <rect width="224" height="120" fill="${dark}"/>
+      <text x="112" y="12" text-anchor="middle" fill="${light}" font-size="9" font-weight="700" font-family="sans-serif">${title}</text>
+      <path d="${area}" fill="${accent}20"/>
+      <path d="${path}" fill="none" stroke="${accent}" stroke-width="2" stroke-linejoin="round"/>
+      ${xs.map((x,i)=>`<circle cx="${x}" cy="${ys[i]}" r="2.5" fill="${accent}"/>`).join("")}
+    </svg>`;
+  }
+
+  function grid(title,hl){
+    const cw=34,rh=15,ox=8,oy=22,cols=6,rows=6;
+    let c=`<rect width="224" height="120" fill="${dark}"/>`;
+    c+=`<rect x="0" y="0" width="224" height="18" fill="${mid}"/>`;
+    c+=`<text x="8" y="13" fill="${light}" font-size="9" font-weight="700" font-family="sans-serif">${title}</text>`;
+    ["A","B","C","D","E","F"].forEach((h,i)=>{
+      c+=`<rect x="${ox+i*cw}" y="${oy}" width="${cw}" height="${rh}" fill="rgba(255,255,255,.08)"/>`;
+      c+=`<text x="${ox+i*cw+cw/2}" y="${oy+10}" text-anchor="middle" fill="${accent}" font-size="7" font-weight="700" font-family="sans-serif">${h}</text>`;
+    });
+    for(let r=1;r<rows;r++){
+      for(let cl=0;cl<cols;cl++){
+        const isHL=hl&&hl.some(h=>h[0]===r&&h[1]===cl);
+        c+=`<rect x="${ox+cl*cw}" y="${oy+r*rh}" width="${cw}" height="${rh}" fill="${isHL?accent+"40":"rgba(255,255,255,.03)"}" stroke="rgba(255,255,255,.06)" stroke-width="0.5"/>`;
+        if(!isHL){const w=6+Math.abs((r*5+cl*11)%14);c+=`<rect x="${ox+cl*cw+3}" y="${oy+r*rh+4}" width="${w}" height="5" fill="rgba(255,255,255,.14)" rx="1.5"/>`;}
+      }
+    }
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="120" viewBox="0 0 224 120">${c}</svg>`;
+  }
+
+  function pivot(title){
+    const hdrs=["Region","Product","Q1","Q2"],cws=[54,52,42,42];
+    const rows=[["East","Widget","450","520"],["East","Gadget","310","290"],["West","Widget","380","410"],["West","Gadget","260","305"]];
+    let c=`<rect width="224" height="120" fill="${dark}"/>`;
+    c+=`<text x="112" y="11" text-anchor="middle" fill="${light}" font-size="9" font-weight="700" font-family="sans-serif">${title}</text>`;
+    let cx=8,oy=14;
+    hdrs.forEach((h,i)=>{c+=`<rect x="${cx}" y="${oy}" width="${cws[i]}" height="13" fill="${mid}"/><text x="${cx+cws[i]/2}" y="${oy+9}" text-anchor="middle" fill="${accent}" font-size="7.5" font-weight="700" font-family="sans-serif">${h}</text>`;cx+=cws[i];});
+    rows.forEach((row,ri)=>{cx=8;row.forEach((cell,ci)=>{const isN=ci>=2;c+=`<rect x="${cx}" y="${oy+13+ri*13}" width="${cws[ci]}" height="13" fill="${ri%2?"rgba(255,255,255,.03)":"transparent"}" stroke="rgba(255,255,255,.05)" stroke-width="0.5"/>`;c+=`<text x="${isN?cx+cws[ci]-3:cx+3}" y="${oy+13+ri*13+9}" text-anchor="${isN?"end":"start"}" fill="${isN?light:"rgba(255,255,255,.65)"}" font-size="7.5" font-family="sans-serif">${cell}</text>`;cx+=cws[ci];});});
+    cx=8;const ty=oy+13+rows.length*13;
+    c+=`<rect x="${cx}" y="${ty}" width="${cws[0]+cws[1]}" height="13" fill="${accent}30"/>`;
+    c+=`<text x="${cx+4}" y="${ty+9}" fill="${accent}" font-size="7.5" font-weight="700" font-family="sans-serif">TOTAL</text>`;
+    cx=8+cws[0]+cws[1];[1400,1525].forEach(v=>{c+=`<text x="${cx+cws[0]-3}" y="${ty+9}" text-anchor="end" fill="${accent}" font-size="7.5" font-weight="700" font-family="sans-serif">${v}</text>`;cx+=cws[0];});
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="120" viewBox="0 0 224 120">${c}</svg>`;
+  }
+
+  const M={
+    "The Excel Interface":[grid("Excel Grid",[[1,0],[1,1],[2,0],[2,1]]),fml("Formula Bar","=SUM(B2:B10)","1,250"),bar("Status Bar",[42,67,55,80,38],["Sum","Avg","Min","Max","Cnt"])],
+    "Ribbon & Tabs":[fml("Home Tab","Clipboard | Font | Align","Commands"),fml("Quick Access Toolbar","⭐ Pin your favourites","1 click"),grid("Alt Key Tips",[])],
+    "Worksheets & Workbooks":[grid("Sheet Tabs",[[0,0],[0,1],[0,2]]),fml("Cross-Sheet Ref","=Sheet2!B5","42"),bar("Workbook Sheets",[3,5,2,4],["Jan","Feb","Mar","Apr"])],
+    "Cell References":[fml("Relative","=A1*B1","shifts on copy"),fml("Absolute","=A1*$D$1","$D$1 locked"),grid("Mixed Ref",[[1,0],[2,0],[3,0]])],
+    "Freeze Panes & Split Views":[grid("Frozen Row 1",[[0,0],[0,1],[0,2],[0,3],[0,4],[0,5]]),fml("Freeze Panes","View → Freeze Panes","Blue line ✓"),fml("Split View","View → Split","4 panes")],
+    "Entering & Editing Data":[grid("Data Entry",[[1,0],[2,0],[3,0],[4,0]]),fml("Edit Cell","F2 to edit in-place","↵ confirm"),fml("Ctrl+Enter","Fill many cells","at once ✓")],
+    "AutoFill & Flash Fill":[bar("AutoFill Series",[1,2,3,4,5,6],["","","","","",""]),fml("Flash Fill","Ctrl+E pattern detect","Names ✓"),line("Fill Dates",[1,2,3,4,5,6,7,8])],
+    "Paste Special":[fml("Paste Values","Ctrl+Alt+V → V","No formulas"),fml("Transpose","Ctrl+Alt+V → T","Rows → Cols"),fml("Multiply All","Copy 1.1 → Multiply","×110%")],
+    "Find & Replace":[fml("Find","Ctrl+F","Find Next"),fml("Replace All","Ctrl+H → Replace All","42 replaced"),fml("Wildcard","J* → John, Jane...","matched ✓")],
+    "SUM & AutoSum":[fml("SUM","=SUM(A1:A10)","1,250"),fml("AutoSum","Alt + =","Auto-detects range"),grid("SUM Range",[[1,0],[2,0],[3,0],[4,0],[5,0]])],
+    "AVERAGE MIN MAX MEDIAN":[fml("AVERAGE","=AVERAGE(B2:B20)","47.3"),fml("MIN / MAX","=MIN(B2:B20)","12"),bar("Stats",[47,12,89,51],["AVG","MIN","MAX","MED"])],
+    "COUNT COUNTA COUNTBLANK":[fml("COUNT","=COUNT(A1:A100)","87"),fml("COUNTA","=COUNTA(A1:A100)","93"),fml("COUNTBLANK","=COUNTBLANK(A:A)","7 gaps")],
+    "ROUND ROUNDUP ROUNDDOWN":[fml("ROUND","=ROUND(3.14159,2)","3.14"),fml("ROUNDUP","=ROUNDUP(2.1,0)","3"),fml("ROUNDDOWN","=ROUNDDOWN(2.9,0)","2")],
+    "Number & Date Formats":[fml("Currency","$#,##0.00","$1,234.50"),fml("Percentage","0.25 → %","25%"),fml("Custom Date","dd mmm yyyy","28 May 2026")],
+    "Cell Formatting & Styles":[grid("Fill & Borders",[[1,0],[1,1],[1,2],[1,3],[1,4],[1,5]]),fml("Format Painter","Click → Paint cells","✓ Copy fmt"),fml("Ctrl+T","Format as Table","Auto-style")],
+    "Conditional Formatting":[bar("Color Scale",[20,45,70,90,55,30],["","","","","",""]),bar("Data Bars",[80,50,30,70,90,40],["","","","","",""]),fml("Formula Rule","=$C2>100","Highlight row")],
+    "TODAY NOW DATE Functions":[fml("TODAY()","=TODAY()","28/05/2026"),fml("NOW()","=NOW()","28/05 14:35"),fml("DATE()","=DATE(2026,5,28)","28/05/2026")],
+    "DATEDIF & Date Math":[fml("Age","=DATEDIF(DOB,TODAY(),\"Y\")","34 yrs"),fml("Days Between","=B1-A1","127 days"),fml("NETWORKDAYS","=NETWORKDAYS(A1,B1)","91 days")],
+    "WEEKDAY WORKDAY EDATE":[fml("WEEKDAY","=WEEKDAY(A1,2)","3 = Wed"),fml("WORKDAY","=WORKDAY(A1,10)","12/06/2026"),fml("EDATE","=EDATE(A1,3)","+3 months")],
+    "Basic Charts":[bar("Column Chart",[45,67,32,80,55],["Jan","Feb","Mar","Apr","May"]),line("Line Trend",[30,45,42,58,65,72,68]),bar("By Category",[70,55,85,40,60],["A","B","C","D","E"])],
+    "Chart Types & Best Practices":[bar("Bar Ranking",[90,75,60,45,30],["P1","P2","P3","P4","P5"]),line("Line Chart",[10,25,30,45,40,60,75]),bar("Combo",[45,67,55,80,50],["Q1","Q2","Q3","Q4","Q5"])],
+    "Print & Page Setup":[fml("Print Area","Page Layout → Print Area","Set ✓"),fml("Scale to Fit","Width: 1 page","Shrink ✓"),fml("Print Titles","Row 1 on every page","Repeat ✓")],
+    "VLOOKUP":[fml("VLOOKUP","=VLOOKUP(A2,$F:$H,2,FALSE)","Smith"),grid("Lookup Table",[[1,0],[2,0],[3,0],[1,1],[2,1],[3,1]]),fml("IFERROR","=IFERROR(VLOOKUP(...),\"–\")","No #N/A")],
+    "HLOOKUP":[fml("HLOOKUP","=HLOOKUP(\"Feb\",$B$1:$M$5,3,F)","450"),grid("Horizontal Table",[[0,0],[0,1],[0,2],[0,3],[0,4],[0,5]]),fml("Exact Match","4th arg = FALSE","required ✓")],
+    "XLOOKUP":[fml("XLOOKUP","=XLOOKUP(A2,F:F,G:G,\"–\")","Smith"),fml("Look Left","Return col LEFT of lookup","✓ No limit"),fml("Multi-Column","=XLOOKUP(A2,F:F,G:I)","3 cols spill")],
+    "INDEX & MATCH":[fml("MATCH","=MATCH(\"X\",A:A,0)","Position: 5"),fml("INDEX","=INDEX(B:B,5)","Value: 84"),fml("Combined","=INDEX(B:B,MATCH(A2,A:A,0))","Result ✓")],
+    "IF IFS Nested IF":[fml("IF","=IF(A1>100,\"High\",\"Low\")","\"High\""),fml("Nested IF","=IF(A1>90,\"A\",IF(...)","Grade A"),fml("IFS","=IFS(A1>90,\"A\",A1>75,\"B\"...)","Cleaner ✓")],
+    "AND OR NOT SWITCH":[fml("AND","=AND(A1>0,B1>0)","TRUE"),fml("OR","=OR(A1=\"NY\",A1=\"LA\")","TRUE"),fml("SWITCH","=SWITCH(A1,1,\"Low\",2,\"Med\"...)","\"Med\"")],
+    "IFERROR IFNA":[fml("IFERROR","=IFERROR(formula,\"\")","blank shown"),fml("Div/Zero","=IFERROR(A1/B1,0)","0"),fml("IFNA","=IFNA(XLOOKUP(...),\"–\")","only #N/A")],
+    "COUNTIF & COUNTIFS":[fml("COUNTIF","=COUNTIF(A:A,\"East\")","42"),fml("COUNTIFS","=COUNTIFS(A:A,\"E\",B:B,\">500\")","18"),fml("Wildcard","=COUNTIF(A:A,\"App*\")","7 matches")],
+    "SUMIF & SUMIFS":[fml("SUMIF","=SUMIF(A:A,\"East\",B:B)","12,450"),fml("SUMIFS","=SUMIFS(C:C,A:A,\"E\",B:B,\">500\")","8,320"),bar("By Region",[45,67,32,80],["E","W","N","S"])],
+    "AVERAGEIF & AVERAGEIFS":[fml("AVERAGEIF","=AVERAGEIF(A:A,\"East\",B:B)","284"),fml("Excl. Zeros","=AVERAGEIF(B:B,\">0\",B:B)","no zeros"),fml("AVERAGEIFS","=AVERAGEIFS(C:C,A:A,\"E\",B:B,\"Q1\")","312")],
+    "Text Functions":[fml("LEFT","=LEFT(A1,FIND(\" \",A1)-1)","John"),fml("TEXTJOIN","=TEXTJOIN(\", \",TRUE,A1:A5)","a, b, c"),fml("TRIM+PROPER","=PROPER(TRIM(A1))","Clean Name")],
+    "TEXT & VALUE Functions":[fml("TEXT date","=TEXT(A1,\"dd mmm yyyy\")","28 May 2026"),fml("TEXT currency","=TEXT(A1,\"$#,##0\")","$1,234"),fml("VALUE","=VALUE(\"1,234\")","1234")],
+    "Pivot Tables":[pivot("Pivot Table"),bar("By Region",[450,380,310,260],["E-W","E-G","W-W","W-G"]),fml("Value Field","Sum → Count","→ % of Total")],
+    "Pivot Table Grouping & Calculated Fields":[fml("Group Dates","Right-click → Group","Months ✓"),fml("Calc Field","Revenue - Cost","= Profit"),pivot("Grouped Pivot")],
+    "Slicers & Timelines":[fml("Insert Slicer","PivotTable Analyze","→ Slicers ✓"),fml("Timeline","Date field slider","Month view"),bar("Filtered",[80,0,55,0],["E","W","N","S"])],
+    "Sort & Filter":[bar("Sorted A→Z",[10,25,38,50,72,90],["","","","","",""]),fml("AutoFilter","Ctrl+Shift+L","Dropdowns ✓"),fml("Filter by","Number > 500","42 rows shown")],
+    "Advanced Filter":[grid("Criteria Range",[[0,0],[0,1],[0,2],[1,0],[2,0]]),fml("Copy to Loc","Extract filtered","to B1:D50"),fml("OR Criteria","Row1: East","Row2: West")],
+    "Data Validation":[fml("Dropdown","Allow: List","Yes,No,Maybe"),fml("Number Range","1 to 100 only","Error if not"),fml("Input Msg","Tooltip on select","guides user")],
+    "Remove Duplicates & Text to Columns":[fml("Remove Dupes","Data → Remove Dups","15 removed"),fml("Text to Cols","Comma delimited","A,B → A | B"),fml("Fixed Width","Col at pos 10","Split ✓")],
+    "Tables (ListObjects)":[grid("Excel Table",[[0,0],[0,1],[0,2],[0,3],[0,4],[0,5]]),fml("Structured Ref","=[@Price]*[@Qty]","Row formula"),fml("Table Col Ref","=SUM(Sales[Rev])","Auto-expand")],
+    "FILTER Function":[fml("FILTER","=FILTER(A:C,B:B=\"East\")","42 rows spill"),fml("AND Filter","(B:B=\"E\")*(C:C>500)","Multiply crit"),fml("With SORT","=SORT(FILTER(...),3,-1)","Sorted ✓")],
+    "SORT & SORTBY":[fml("SORT","=SORT(A2:C100,3,-1)","Desc by col3"),fml("SORTBY","=SORTBY(A:B,C:C,-1)","Ext key col"),fml("Multi-level","=SORT(A:C,{1,2},{1,-1})","2-col sort")],
+    "UNIQUE Function":[fml("UNIQUE","=UNIQUE(A2:A100)","42 distinct"),fml("Sorted","=SORT(UNIQUE(A:A))","A-Z unique"),fml("Count","=COUNTA(UNIQUE(A:A))","42 values")],
+    "SEQUENCE & RANDARRAY":[fml("SEQUENCE","=SEQUENCE(10)","1 to 10"),fml("Custom Step","=SEQUENCE(5,1,0,10)","0,10,20,30,40"),fml("RANDARRAY","=RANDARRAY(5,3,1,100,TRUE)","5×3 grid")],
+    "LET Function":[fml("LET","=LET(x,A1+B1,x*2)","Named var"),fml("Multi-step","=LET(f,FILTER(...),SORT(f))","Chained"),fml("Performance","Calc once","reuse 3×")],
+    "LAMBDA Function":[fml("LAMBDA","=LAMBDA(a,b,a+b)(3,4)","7"),fml("Named Fn","=AddTax(A1)","custom fn ✓"),fml("BYROW","=BYROW(A1:C5,LAMBDA(r,SUM(r)))","Row sums")],
+    "Array Formulas (CSE)":[fml("CSE","={SUM(1/COUNTIF(A:A,A:A))}","distinct ct"),fml("MMULT","=MMULT(A1:C3,E1:G3)","Matrix ✓"),fml("Modern","=FILTER(A:C,B:B>0)","No CSE needed")],
+    "Power Query Basics":[fml("Get Data","Data → Get Data","From File ✓"),fml("Transform","Remove cols / rename","types ✓"),fml("Refresh","Data → Refresh All","1 click ✓")],
+    "Power Query Advanced":[fml("Unpivot","Wide → Tall","Transform ✓"),fml("Custom Col","= [Price]*[Qty]","M formula"),fml("Group By","Sum by Region","Aggregated")],
+    "What-If Analysis":[fml("Goal Seek","Set B5=500","B2 → 6.5%"),bar("Data Table",[350,425,500,575,650],["4%","5%","6%","7%","8%"]),fml("Scenarios","Best / Base / Worst","Compare ✓")],
+    "Solver Add-in":[fml("Objective","Maximize Profit","→ Solver"),fml("Constraints","x<=100, y<=80","Add limits"),fml("Solution","x=75, y=60","Optimal ✓")],
+    "Statistical Functions":[fml("STDEV","=STDEV(B2:B100)","12.4"),line("Distribution",[5,15,35,65,80,65,35,15,5]),fml("CORREL","=CORREL(A:A,B:B)","0.87")],
+    "Named Ranges & Dynamic Names":[fml("Define Name","TaxRate = $B$1","Name ✓"),fml("In Formula","=Price*TaxRate","readable"),fml("Dynamic","=OFFSET($B$2,0,0,COUNTA($B:$B)-1,1)","auto-expand")],
+    "Advanced Charts":[bar("Combo Chart",[45,67,55,80,50],["Q1","Q2","Q3","Q4","Q5"]),bar("Waterfall",[100,20,30,10,50,15,135],["S","A","B","C","D","E","T"]),line("Dynamic",[30,45,60,50,70,65,80])],
+    "Protecting Workbooks & Sheets":[fml("Lock Cells","Ctrl+1 → Locked","checked ✓"),fml("Protect Sheet","Review → Protect","Password ✓"),fml("Encrypt","File → Protect → Encrypt","Required to open")],
+    "VBA Basics":[fml("Record Macro","Developer → Record","Actions saved"),fml("VBA Editor","Alt+F11","Code view"),fml("Run Macro","Developer → Run","Ctrl+Shift+M")],
+    "VBA Variables & Data Types":[fml("Dim","Dim x As Long","Declare var"),fml("Assign","x = Range(\"A1\").Value","Read cell"),fml("Option Explicit","Forces all","declarations ✓")],
+    "VBA Loops":[fml("For Next","For i=1 To 100","Cells(i,1)=i"),fml("For Each","For Each cell In Range","cell.Value*1.1"),fml("Do While","Do While Cells(r,1)<>\"\"","Find last row")],
+    "VBA Conditionals & Error Handling":[fml("If/Then","If x>100 Then","MsgBox \"High\""),fml("Select Case","Case \"East\"","tax=0.1"),fml("On Error","On Error GoTo","ErrHandler:")],
+    "VBA Working with Ranges":[fml("Read Cell","val=Range(\"B2\").Value","42"),fml("Last Row","Cells(Rows.Count,1).End(xlUp)","Row: 1248"),fml("CurrentRegion","Range(\"A1\").CurrentRegion","Data block")],
+    "VBA UserForms":[fml("UserForm","Insert → UserForm","Design UI"),fml("TextBox","txtName.Value","Read input"),fml("Submit","Range(\"A1\").Value=txtName.Value","Write cell")],
+    "Power Pivot & Data Model":[pivot("Data Model"),fml("Relationship","CustomerID → CustomerID","Join tables"),fml("Cross-Table","Fields from 2+ tables","in one pivot ✓")],
+    "DAX Measures":[fml("Measure","Total:=SUM(Sales[Amt])","12,450"),fml("CALCULATE","CALCULATE([Sales],Region=\"E\")","4,200"),fml("YTD","DATESYTD('Date'[Date])","Jan–May ✓")],
+    "DAX CALCULATE & Context":[fml("Remove Filters","CALCULATE([Sales],ALL(Sales))","Grand total"),fml("% of Total","DIVIDE([Sales],[All Sales])","34.2%"),fml("Prior Year","SAMEPERIODLASTYEAR(...)","vs LY")],
+    "Professional Dashboards":[bar("KPI Cards",[92,78,85,91],["Rev","Mgn","Sat","NPS"]),line("Trend",[40,55,50,65,70,68,80]),bar("Region Split",[45,30,25],["East","West","North"])],
+    "Office Scripts & Automation":[fml("Record Script","Automate → Record Actions","TypeScript gen"),fml("Run Script","Automate → Run Script","Execute now ✓"),fml("Power Automate","Run on schedule","Email trigger")],
+    "Python in Excel":[fml("PY Formula","=PY(\"import pandas as pd...\"","DataFrame out"),fml("xl() Function","xl(\"A1:C100\",headers=True)","→ DataFrame"),fml("matplotlib","plt.bar(df[\"Region\"]...)","Chart output")],
+  };
+  const fb=[fml(key,"Excel Feature","Click to learn"),bar("Example",[40,60,50,80,70],["","","","",""]),line("Trend",[30,45,40,60,55,70])];
+  return M[key]||fb;
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-// WELCOME
-// ════════════════════════════════════════════════════════════════════════════
+function buildSB(lv){
+  const sb=document.getElementById("sb");sb.innerHTML="";
+  const lvs=lv==="all"?C:C.filter(l=>l.lv===lv);
+  lvs.forEach(ld=>{ld.sections.forEach(sec=>{
+    const w=document.createElement("div");w.className="sb-sec";
+    const h=document.createElement("div");h.className="sb-head";
+    h.innerHTML=`<span style="color:${ld.c};font-size:7px">●</span>${sec.t}<span class="arr">▼</span>`;
+    const items=document.createElement("div");
+    sec.i.forEach(item=>{
+      const el=document.createElement("div");
+      el.className="sb-item"+(activeKey===item?" active":"");
+      const isDone=done.has(item);
+      el.innerHTML=`<span class="ck" style="color:${isDone?"#22C55E":""}">${isDone?"✓":"○"}</span>${item}`;
+      el.onclick=()=>openLesson(item,ld,el);
+      items.appendChild(el);
+    });
+    h.onclick=()=>{const c=items.style.display==="none";items.style.display=c?"":"none";h.classList.toggle("closed",!c);};
+    w.appendChild(h);w.appendChild(items);sb.appendChild(w);
+  });});
+}
 function showWelcome(){
   activeKey=null;
-  document.getElementById("welcomePanel").style.display="";
-  document.getElementById("lessonPanel").style.display="none";
+  document.getElementById("wp").style.display="";
+  document.getElementById("lp").style.display="none";
   document.querySelectorAll(".sb-item").forEach(e=>e.classList.remove("active"));
-  const total=totalT(), doneC=doneT(), pct=Math.round((doneC/total)*100);
-  document.getElementById("welcomePanel").innerHTML=`
+  const tot=totT(),dn=done.size,pct=Math.round((dn/tot)*100);
+  document.getElementById("wp").innerHTML=`
   <div class="welcome">
-    <div class="welcome-eyebrow">Complete Learning Guide</div>
-    <h2>Excel Mastery —<br>From Zero to Expert</h2>
-    <p>Every topic has a full lesson: plain-English explanation, numbered steps, formula syntax, a pro tip, and visual examples. All pre-written — instant, free, works offline.</p>
-    <div class="how-box">
-      <h3>How to use this guide</h3>
-      <div class="how-steps">
-        <div class="how-step"><div class="how-num">1</div><p>Use the tabs at the top to filter by skill level (Beginner → Expert)</p></div>
-        <div class="how-step"><div class="how-num">2</div><p>Click any topic in the left sidebar to open its full lesson</p></div>
-        <div class="how-step"><div class="how-num">3</div><p>Completed topics are marked ✓ — your progress is saved automatically</p></div>
-      </div>
+    <div class="eyebrow">Complete Learning Guide • 80+ Topics</div>
+    <h2>Excel Mastery —<br>Zero to Expert</h2>
+    <p>Every topic has a full lesson: plain-English explanation, step-by-step guide, formula syntax, a pro tip, and visual examples. All pre-written — instant and free.</p>
+    <div class="how-box"><h3>How to use</h3>
+      <div class="how-step"><div class="how-num">1</div><p>Use the level tabs at the top to filter topics</p></div>
+      <div class="how-step"><div class="how-num">2</div><p>Click any topic in the left sidebar to open its full lesson</p></div>
+      <div class="how-step"><div class="how-num">3</div><p>Completed topics are marked ✓ — progress saves automatically</p></div>
     </div>
-    <div class="prog" style="max-width:500px">
-      <div class="prog-text">Overall: <strong>${doneC}/${total}</strong> topics completed</div>
+    <div class="prog" style="max-width:480px">
+      <div class="prog-t">Progress: <strong>${dn}/${tot}</strong></div>
       <div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
-      <div class="prog-text"><strong>${pct}%</strong></div>
+      <div class="prog-t"><strong>${pct}%</strong></div>
     </div>
     <div class="stat-row">
-      ${CURRICULUM.map(l=>{
-        const t=l.sections.reduce((a,s)=>a+s.items.length,0);
-        const d=l.sections.reduce((a,s)=>a+s.items.filter(i=>done.has(i)).length,0);
-        return `<div class="stat-card" onclick="setLevel('${l.lv}',null)">
-          <div class="n" style="color:${l.c}">${d}<span style="font-size:14px;color:var(--muted)">/${t}</span></div>
-          <div class="l">${l.label}</div>
-          <div class="sub-pct">${Math.round((d/t)*100)}% done</div>
-        </div>`;
-      }).join("")}
+      ${C.map(l=>{const t=l.sections.reduce((a,s)=>a+s.i.length,0);const d=l.sections.reduce((a,s)=>a+s.i.filter(i=>done.has(i)).length,0);
+      return `<div class="sc" onclick="setLv('${l.lv}',null)"><div class="n" style="color:${l.c}">${d}<span style="font-size:13px;color:var(--mu)">/${t}</span></div><div class="l">${l.label}</div><div class="pp">${Math.round((d/t)*100)}% done</div></div>`;}).join("")}
     </div>
   </div>`;
 }
-
-// ════════════════════════════════════════════════════════════════════════════
-// OPEN LESSON
-// ════════════════════════════════════════════════════════════════════════════
-function openLesson(key, lvData, el){
+function openLesson(key,ld,el){
   activeKey=key;
   document.querySelectorAll(".sb-item").forEach(e=>e.classList.remove("active"));
-  if(el) el.classList.add("active");
-
-  const L=LESSONS[key];
-  if(!L) return;
-
-  done.add(key); save(); updateHeaderProgress();
-  buildSB(currentLv);
-
-  document.getElementById("welcomePanel").style.display="none";
-  const panel=document.getElementById("lessonPanel");
-  panel.style.display="";
-
-  const total=totalT(), doneC=doneT(), pct=Math.round((doneC/total)*100);
-
-  let fmlHTML="";
-  if(L.formulas&&L.formulas.length){
-    fmlHTML=`<div class="blk">
-      <div class="blk-head">📐 Formula Syntax</div>
-      ${L.formulas.map(f=>`<div class="fml">${f.s}</div><div class="fml-d">${f.d}</div>`).join("")}
-    </div>`;
-  }
-
-  const stepsHTML=L.steps.map((s,i)=>`
-    <div class="step">
-      <div class="step-n">${i+1}</div>
-      <div><h4>${s.t}</h4><p>${s.d}</p></div>
-    </div>`).join("");
-
-  const imgHTML=L.imgs.map((q,i)=>{
-    const url=`https://source.unsplash.com/400x260/?${encodeURIComponent(q.replace(/excel/gi,"spreadsheet data").replace(/ /g,","))}&random=${i*31+key.charCodeAt(0)}`;
-    return `<div class="img-card">
-      <img src="${url}" alt="${q}" loading="lazy"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div class="img-placeholder" style="display:none"><span>📊<br>${q}</span></div>
-      <div class="img-lbl">${q}</div>
-    </div>`;
+  if(el)el.classList.add("active");
+  const D=L[key];if(!D)return;
+  done.add(key);save();updHP();buildSB(curLv);
+  document.getElementById("wp").style.display="none";
+  const panel=document.getElementById("lp");panel.style.display="";
+  const tot=totT(),dn=done.size,pct=Math.round((dn/tot)*100);
+  const lvLabel=D.lv.charAt(0).toUpperCase()+D.lv.slice(1);
+  let fHTML="";
+  if(D.fm&&D.fm.length){fHTML=`<div class="blk"><div class="bhead">📐 Formula Syntax</div>${D.fm.map(f=>`<div class="fml">${f.s}</div><div class="fmld">${f.d}</div>`).join("")}</div>`;}
+  const stHTML=D.steps.map((s,i)=>`<div class="step"><div class="sn">${i+1}</div><div><h4>${s.t}</h4><p>${s.d}</p></div></div>`).join("");
+  const imgHTML=D.imgs.map((q,i)=>{
+    const colors=[["#1e3a5f","#2563eb","#60a5fa"],["#1a3a2a","#16a34a","#4ade80"],["#3b1f1f","#dc2626","#f87171"]];
+    const [bg,mid,light]=colors[i%3];
+    const icons=["📊","📈","📉","🔢","🗂️","📋","🔍","⚡","🧮","📐"];
+    const icon=icons[(q.length+i)%icons.length];
+    const words=q.replace(/excel/gi,"").trim().split(" ").slice(0,4).join(" ");
+    return `<div class="icard"><div class="iph iph-styled" style="background:linear-gradient(135deg,${bg},${mid});height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border-bottom:1px solid rgba(255,255,255,.1)"><span style="font-size:28px">${icon}</span><span style="font-size:11px;color:${light};font-weight:600;text-align:center;padding:0 10px;line-height:1.4">${words}</span></div><div class="ilbl">${q}</div></div>`;
   }).join("");
-
-  const lvLabel=L.lv.charAt(0).toUpperCase()+L.lv.slice(1);
-
   panel.innerHTML=`
   <div class="lesson">
-    <div class="lesson-nav">
-      <div class="back-btn" onclick="showWelcome()">← Overview</div>
-      <span class="nav-sep">/</span>
-      <span class="nav-crumb">${lvLabel}</span>
-    </div>
-    <div class="prog">
-      <div class="prog-text">Progress: <strong>${doneC}/${total}</strong></div>
-      <div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
-      <div class="prog-text"><strong>${pct}%</strong></div>
-    </div>
-    <div class="lvl-badge" style="background:${L.c}18;color:${L.c};border:1px solid ${L.c}35">${lvLabel}</div>
-    <div class="lesson-h1">${key}</div>
-    <div class="lesson-sub">${L.sub}</div>
-    <div class="blk">
-      <div class="blk-head">💡 What is this?</div>
-      <div class="explain">${L.explain}</div>
-    </div>
-    <div class="blk">
-      <div class="blk-head">🪜 Step-by-step guide</div>
-      <div class="steps">${stepsHTML}</div>
-    </div>
-    ${fmlHTML}
-    <div class="blk">
-      <div class="blk-head">⚡ Pro tip</div>
-      <div class="tip"><span style="font-size:16px;flex-shrink:0">💡</span><p>${L.tip}</p></div>
-    </div>
-    <div class="blk">
-      <div class="blk-head">🖼️ Visual examples</div>
-      <div class="img-grid">${imgHTML}</div>
-    </div>
+    <div class="lesson-nav"><div class="back" onclick="showWelcome()">← Overview</div><span class="sep">/</span><span class="crumb">${lvLabel}</span></div>
+    <div class="prog"><div class="prog-t">Progress: <strong>${dn}/${tot}</strong></div><div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div><div class="prog-t"><strong>${pct}%</strong></div></div>
+    <div class="lbadge" style="background:${D.c}18;color:${D.c};border:1px solid ${D.c}35">${lvLabel}</div>
+    <div class="lh1">${key}</div>
+    <div class="lsub">${D.sub}</div>
+    <div class="blk"><div class="bhead">💡 What is this?</div><div class="expl">${D.ex}</div></div>
+    <div class="blk"><div class="bhead">🪜 Step-by-step</div><div class="steps">${stHTML}</div></div>
+    ${fHTML}
+    <div class="blk"><div class="bhead">⚡ Pro tip</div><div class="tip"><span style="font-size:15px;flex-shrink:0">💡</span><p>${D.tip}</p></div></div>
+    <div class="blk"><div class="bhead">🖼️ Visual examples</div><div class="igrid">${imgHTML}</div></div>
   </div>`;
 }
-
-// ════════════════════════════════════════════════════════════════════════════
-// LEVEL FILTER
-// ════════════════════════════════════════════════════════════════════════════
-function setLevel(lv, tabEl){
-  currentLv=lv;
+function setLv(lv,tabEl){
+  curLv=lv;
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  if(tabEl) tabEl.classList.add("active");
-  else {
-    const map={all:0,beginner:1,intermediate:2,advanced:3,expert:4};
-    const tabs=document.querySelectorAll(".tab");
-    if(tabs[map[lv]]) tabs[map[lv]].classList.add("active");
-  }
-  buildSB(lv);
-  showWelcome();
+  if(tabEl)tabEl.classList.add("active");
+  else{const m={all:0,beginner:1,intermediate:2,advanced:3,expert:4};const ts=document.querySelectorAll(".tab");if(ts[m[lv]])ts[m[lv]].classList.add("active");}
+  buildSB(lv);showWelcome();
 }
-
-// ════════════════════════════════════════════════════════════════════════════
-// INIT
-// ════════════════════════════════════════════════════════════════════════════
-buildSB("all");
-showWelcome();
-updateHeaderProgress();
+buildSB("all");showWelcome();updHP();
 </script>
 </body>
 </html>
